@@ -11,7 +11,10 @@
 
 ## Screenshots
 
-*(Add screenshots here)*
+<div style="display: flex; flex-direction: row; gap: 20px;">
+  <img src="assets/screenshot-welcome.png" alt="Welcome Screen" width="250" />
+  <img src="assets/screenshot-quote.png" alt="Quote Screen" width="250" />
+</div>
 
 ## Getting Started
 
