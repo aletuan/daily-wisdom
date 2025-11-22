@@ -12,29 +12,36 @@ const client = new Anthropic({
  * Generate personalized wisdom based on user context and emotional state
  * @param {string} context - What the user is working on
  * @param {object} emotions - Emotional state with overwhelmedHopeful and stuckProgress values (0-100)
- * @returns {Promise<string>} - Personalized wisdom message
+ * @returns {Promise<object>} - Object containing { text, author, connection }
  */
 export async function generatePersonalizedWisdom(context, emotions) {
     try {
         // Convert emotion slider values to descriptive states
         const emotionState = interpretEmotions(emotions);
 
-        const prompt = `You are a gentle, supportive life coach speaking to a young person.
+        const prompt = `You are a wise curator of human wisdom.
 
-Context: They're working on "${context}"
+Context: User is working on "${context}"
 Current feeling: ${emotionState}
 
-Provide a short, personalized piece of wisdom (2-3 sentences) that:
-- Acknowledges their current state
-- Offers gentle encouragement
-- Includes one small, actionable insight
-- Feels warm and non-judgmental
+Task: Select a famous quote (real quote by a real person) that perfectly addresses this state of mind.
+Output format: JSON with the following fields:
+- "text": The exact text of the quote
+- "author": The name of the person who said it
+- "connection": A brief, gentle sentence (10-15 words) connecting this quote to their current feeling
 
-Keep it conversational and authentic. Don't use clichés or overly formal language.`;
+Example output:
+{
+  "text": "The only way out is through.",
+  "author": "Robert Frost",
+  "connection": "This reminds us that your current struggle is actually the path forward."
+}
+
+Do not make up quotes. Use real, verified quotes from history, philosophy, or literature.`;
 
         const message = await client.messages.create({
             model: 'claude-3-haiku-20240307',
-            max_tokens: 150,
+            max_tokens: 200,
             temperature: 0.7,
             messages: [
                 {
@@ -44,7 +51,15 @@ Keep it conversational and authentic. Don't use clichés or overly formal langua
             ],
         });
 
-        return message.content[0].text;
+        // Parse the JSON response
+        const content = message.content[0].text;
+        // Extract JSON if Claude adds extra text
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            return JSON.parse(jsonMatch[0]);
+        } else {
+            throw new Error('Failed to parse JSON response');
+        }
     } catch (error) {
         console.error('Claude API error:', error);
 
@@ -74,15 +89,12 @@ function interpretEmotions(emotions) {
  * Get a fallback quote when API is unavailable
  */
 function getFallbackWisdom(context) {
-    // Map context to relevant quote categories
-    const contextKeywords = {
-        direction: ['future', 'dreams', 'create'],
-        habits: ['slowly', 'stop', 'continue'],
-        stress: ['courage', 'failure', 'success'],
-        growth: ['value', 'believe', 'halfway'],
-    };
-
     // Find a relevant quote or return a random one
     const randomQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-    return `"${randomQuote.text}"\n\n- ${randomQuote.author}`;
+
+    return {
+        text: randomQuote.text,
+        author: randomQuote.author,
+        connection: "Here is a timeless thought to guide you on your journey today."
+    };
 }

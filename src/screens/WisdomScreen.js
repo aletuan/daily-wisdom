@@ -5,7 +5,7 @@ import { generatePersonalizedWisdom } from '../services/claudeService';
 
 export default function WisdomScreen({ route, navigation }) {
     const { context, emotions } = route.params;
-    const [wisdom, setWisdom] = useState('');
+    const [wisdom, setWisdom] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -48,7 +48,7 @@ export default function WisdomScreen({ route, navigation }) {
                 {loading ? (
                     <View style={styles.loadingContainer}>
                         <ActivityIndicator size="large" color={COLORS.sageGreen} />
-                        <Text style={styles.loadingText}>Thinking...</Text>
+                        <Text style={styles.loadingText}>Curating wisdom...</Text>
                     </View>
                 ) : error ? (
                     <View style={styles.errorContainer}>
@@ -57,10 +57,15 @@ export default function WisdomScreen({ route, navigation }) {
                             <Text style={styles.retryButtonText}>Try Again</Text>
                         </TouchableOpacity>
                     </View>
-                ) : (
+                ) : wisdom && (
                     <>
                         <View style={styles.wisdomContainer}>
-                            <Text style={styles.wisdomText}>{wisdom}</Text>
+                            <Text style={styles.quoteText}>"{wisdom.text}"</Text>
+                            <Text style={styles.authorText}>- {wisdom.author}</Text>
+
+                            <View style={styles.divider} />
+
+                            <Text style={styles.connectionText}>{wisdom.connection}</Text>
                         </View>
 
                         <Text style={styles.supportText}>
@@ -155,10 +160,30 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 8,
     },
-    wisdomText: {
-        fontSize: 18,
+    quoteText: {
+        fontSize: 22,
+        fontStyle: 'italic',
         color: COLORS.darkBlueGrey,
-        lineHeight: 28,
+        lineHeight: 32,
+        marginBottom: 16,
+    },
+    authorText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: COLORS.sageGreen,
+        textAlign: 'right',
+        marginBottom: 24,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#E0E0E0',
+        marginBottom: 20,
+    },
+    connectionText: {
+        fontSize: 16,
+        color: COLORS.blueGrey,
+        lineHeight: 24,
+        fontStyle: 'italic',
     },
     supportText: {
         fontSize: 16,
