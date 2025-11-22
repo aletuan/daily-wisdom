@@ -46,6 +46,27 @@
     - **iOS Simulator**: Press `i` in the terminal.
     - **Android Emulator**: Press `a` in the terminal.
 
+## Troubleshooting & Common Issues
+
+### App Stuck on "Opening project..." or Timeout Error
+If the Expo Go app on your phone gets stuck or shows a timeout error when trying to connect:
+
+1.  **Check Network**: Ensure your phone and computer are on the **same Wi-Fi network**.
+2.  **Use Tunnel Connection**: If the issue persists (often due to firewall or network isolation), try running the app with the `--tunnel` flag:
+    ```bash
+    npx expo start --tunnel
+    ```
+    *Note: This may require installing `@expo/ngrok` when prompted.*
+
+### Port Already in Use
+If you see an error that port 8081 is busy:
+1.  Kill the process occupying the port:
+    ```bash
+    lsof -i :8081
+    kill -9 <PID>
+    ```
+2.  Or simply restart Expo, and it will ask to use a different port (e.g., 8082).
+
 ## Technologies
 
 - **React Native**: For building the mobile UI.
