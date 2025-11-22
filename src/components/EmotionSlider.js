@@ -1,0 +1,45 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import Slider from '@react-native-community/slider';
+import { COLORS } from '../styles/colors';
+
+export default function EmotionSlider({ leftLabel, rightLabel, value, onValueChange }) {
+    return (
+        <View style={styles.container}>
+            <View style={styles.labelsContainer}>
+                <Text style={styles.label}>{leftLabel}</Text>
+                <Text style={styles.label}>{rightLabel}</Text>
+            </View>
+            <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={100}
+                value={value}
+                onValueChange={onValueChange}
+                minimumTrackTintColor={COLORS.sageGreen}
+                maximumTrackTintColor="#E0E0E0"
+                thumbTintColor={COLORS.sageGreen}
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        marginBottom: 30,
+    },
+    labelsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+    },
+    label: {
+        fontSize: 14,
+        color: COLORS.blueGrey,
+        fontWeight: '500',
+    },
+    slider: {
+        width: '100%',
+        height: 40,
+    },
+});
