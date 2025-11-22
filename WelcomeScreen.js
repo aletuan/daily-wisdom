@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 export default function WelcomeScreen({ navigation }) {
     const handlePress = () => {
@@ -11,6 +11,12 @@ export default function WelcomeScreen({ navigation }) {
             <View style={styles.content}>
                 <Text style={styles.title}>Youth Wisdom</Text>
                 <Text style={styles.subtitle}>Your daily guide to navigating life's journey.</Text>
+
+                <Image
+                    source={require('./assets/welcome-image.png')}
+                    style={styles.image}
+                    resizeMode="contain"
+                />
 
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
                     <Text style={styles.buttonText}>Start Your Journey</Text>
@@ -43,10 +49,15 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 18,
         color: '#546E7A', // Blue Grey for subtitle
-        marginBottom: 50,
+        marginBottom: 30,
         textAlign: 'center',
         lineHeight: 26,
         paddingHorizontal: 20,
+    },
+    image: {
+        width: 250,
+        height: 250,
+        marginBottom: 40,
     },
     button: {
         backgroundColor: '#81C784', // Sage Green
