@@ -23,41 +23,46 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F8F9FA', // Soft Off-White
         alignItems: 'center',
         justifyContent: 'center',
     },
     content: {
         alignItems: 'center',
-        padding: 20,
+        padding: 30,
+        width: '100%',
     },
     title: {
-        fontSize: 28,
+        fontSize: 32,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 15,
         textAlign: 'center',
-        color: '#333',
+        color: '#2E7D32', // Darker Green for title
+        letterSpacing: 1,
     },
     subtitle: {
-        fontSize: 16,
-        color: '#666',
-        marginBottom: 40,
+        fontSize: 18,
+        color: '#546E7A', // Blue Grey for subtitle
+        marginBottom: 50,
         textAlign: 'center',
+        lineHeight: 26,
+        paddingHorizontal: 20,
     },
     button: {
-        backgroundColor: '#007AFF',
-        paddingHorizontal: 30,
-        paddingVertical: 15,
-        borderRadius: 25,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
+        backgroundColor: '#81C784', // Sage Green
+        paddingHorizontal: 40,
+        paddingVertical: 18,
+        borderRadius: 30, // More rounded
+        elevation: 4,
+        shadowColor: '#81C784',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: '600',
+        letterSpacing: 0.5,
     },
 });
