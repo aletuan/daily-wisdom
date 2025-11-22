@@ -28,20 +28,26 @@ Task: Select a famous quote (real quote by a real person) that perfectly address
 Output format: JSON with the following fields:
 - "text": The exact text of the quote
 - "author": The name of the person who said it
-- "connection": A brief, gentle sentence (10-15 words) connecting this quote to their current feeling
+- "why_this": A profound but friendly explanation (2-3 sentences) of why this quote fits their current state. Acknowledge their feelings and explain how this wisdom offers a shift in perspective.
+- "activities": An array of 3 simple, actionable steps (max 10 words each) the user can take right now to embody this wisdom.
 
 Example output:
 {
   "text": "The only way out is through.",
   "author": "Robert Frost",
-  "connection": "This reminds us that your current struggle is actually the path forward."
+  "why_this": "It's completely natural to feel stuck when facing a big challenge. This quote reminds us that the uncomfortable feelings aren't a sign to stop, but actually the doorway to your next breakthrough.",
+  "activities": [
+    "Take 3 deep breaths right now.",
+    "Write down one thing you're grateful for.",
+    "Step outside for 2 minutes."
+  ]
 }
 
 Do not make up quotes. Use real, verified quotes from history, philosophy, or literature.`;
 
         const message = await client.messages.create({
             model: 'claude-3-haiku-20240307',
-            max_tokens: 200,
+            max_tokens: 350,
             temperature: 0.7,
             messages: [
                 {
@@ -53,12 +59,18 @@ Do not make up quotes. Use real, verified quotes from history, philosophy, or li
 
         // Parse the JSON response
         const content = message.content[0].text;
-        // Extract JSON if Claude adds extra text
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-            return JSON.parse(jsonMatch[0]);
+        console.log('Claude response:', content); // Debug log
+
+        // Extract JSON - handle potential markdown code blocks or extra text
+        // Look for the first opening brace and the last closing brace
+        const firstBrace = content.indexOf('{');
+        const lastBrace = content.lastIndexOf('}');
+
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            const jsonString = content.substring(firstBrace, lastBrace + 1);
+            return JSON.parse(jsonString);
         } else {
-            throw new Error('Failed to parse JSON response');
+            throw new Error('No JSON object found in response');
         }
     } catch (error) {
         console.error('Claude API error:', error);
@@ -95,6 +107,11 @@ function getFallbackWisdom(context) {
     return {
         text: randomQuote.text,
         author: randomQuote.author,
-        connection: "Here is a timeless thought to guide you on your journey today."
+        why_this: "Sometimes the ancient wisdom speaks most directly to our modern struggles. This thought invites you to pause and find your center amidst the noise.",
+        activities: [
+            "Take a moment to breathe deeply.",
+            "Reflect on what this quote means to you.",
+            "Share this thought with a friend."
+        ]
     };
 }

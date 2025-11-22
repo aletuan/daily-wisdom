@@ -3,6 +3,25 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView
 import { COLORS } from '../styles/colors';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 
+const ActivityItem = ({ text }) => {
+    const [checked, setChecked] = useState(false);
+
+    return (
+        <TouchableOpacity
+            style={[styles.activityItem, checked && styles.activityItemChecked]}
+            onPress={() => setChecked(!checked)}
+            activeOpacity={0.7}
+        >
+            <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
+                {checked && <Text style={styles.checkmark}>✓</Text>}
+            </View>
+            <Text style={[styles.activityText, checked && styles.activityTextChecked]}>
+                {text}
+            </Text>
+        </TouchableOpacity>
+    );
+};
+
 export default function WisdomScreen({ route, navigation }) {
     const { context, emotions } = route.params;
     const [wisdom, setWisdom] = useState(null);
@@ -26,14 +45,6 @@ export default function WisdomScreen({ route, navigation }) {
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleStartOver = () => {
-        navigation.navigate('Onboarding');
-    };
-
-    const handleGetAnother = () => {
-        loadWisdom();
     };
 
     return (
@@ -62,39 +73,32 @@ export default function WisdomScreen({ route, navigation }) {
                         <View style={styles.wisdomContainer}>
                             <Text style={styles.quoteText}>"{wisdom.text}"</Text>
                             <Text style={styles.authorText}>- {wisdom.author}</Text>
-
-                            <View style={styles.divider} />
-
-                            <Text style={styles.connectionText}>{wisdom.connection}</Text>
                         </View>
 
-                        <Text style={styles.supportText}>
-                            No rush. Take your time with this.{'\n'}
-                            I'll check in with you tonight.
+                        <View style={styles.sectionContainer}>
+                            <Text style={styles.sectionHeader}>Why this today</Text>
+                            <Text style={styles.whyThisText}>{wisdom.why_this}</Text>
+                        </View>
+
+                        <View style={styles.sectionContainer}>
+                            <Text style={styles.sectionHeader}>Try these steps</Text>
+                            <View style={styles.activitiesContainer}>
+                                {wisdom.activities?.map((activity, index) => (
+                                    <ActivityItem key={index} text={activity} />
+                                ))}
+                            </View>
+                        </View>
+
+                        <View style={styles.separator} />
+
+                        <Text style={styles.closingText}>
+                            Take your time with this.{'\n'}
+                            We'll come back with you {new Date().getHours() >= 18 ? 'tomorrow' : 'tonight'}.
                         </Text>
                     </>
                 )}
             </ScrollView>
 
-            {!loading && !error && (
-                <View style={styles.footer}>
-                    <TouchableOpacity
-                        style={styles.secondaryButton}
-                        onPress={handleGetAnother}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={styles.secondaryButtonText}>Get another perspective</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.primaryButton}
-                        onPress={handleStartOver}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={styles.primaryButtonText}>Start over</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
         </View>
     );
 }
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         padding: 28,
         borderRadius: 20,
-        marginBottom: 32,
+        marginBottom: 24,
         borderLeftWidth: 4,
         borderLeftColor: COLORS.sageGreen,
         elevation: 2,
@@ -161,10 +165,10 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
     },
     quoteText: {
-        fontSize: 22,
+        fontSize: 24,
         fontStyle: 'italic',
         color: COLORS.darkBlueGrey,
-        lineHeight: 32,
+        lineHeight: 36,
         marginBottom: 16,
     },
     authorText: {
@@ -172,63 +176,79 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.sageGreen,
         textAlign: 'right',
+    },
+    sectionContainer: {
         marginBottom: 24,
+        paddingHorizontal: 8,
     },
-    divider: {
-        height: 1,
-        backgroundColor: '#E0E0E0',
-        marginBottom: 20,
-    },
-    connectionText: {
-        fontSize: 16,
-        color: COLORS.blueGrey,
-        lineHeight: 24,
-        fontStyle: 'italic',
-    },
-    supportText: {
-        fontSize: 16,
-        color: COLORS.blueGrey,
-        textAlign: 'center',
-        lineHeight: 24,
-        fontStyle: 'italic',
-    },
-    footer: {
-        padding: 24,
-        paddingBottom: 40,
-        backgroundColor: COLORS.softOffWhite,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
-        gap: 12,
-    },
-    primaryButton: {
-        backgroundColor: COLORS.sageGreen,
-        paddingVertical: 18,
-        borderRadius: 30,
-        elevation: 4,
-        shadowColor: COLORS.sageGreen,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-    },
-    primaryButtonText: {
-        color: COLORS.white,
+    sectionHeader: {
         fontSize: 18,
         fontWeight: '600',
-        textAlign: 'center',
-        letterSpacing: 0.5,
+        color: COLORS.darkGreen,
+        marginBottom: 12,
     },
-    secondaryButton: {
+    whyThisText: {
+        fontSize: 16,
+        color: COLORS.blueGrey,
+        lineHeight: 26,
+    },
+    activitiesContainer: {
+        gap: 12,
+    },
+    activityItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: COLORS.white,
-        paddingVertical: 16,
-        borderRadius: 30,
-        borderWidth: 2,
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+    },
+    activityItemChecked: {
+        backgroundColor: '#F0F7F0', // Very light green
         borderColor: COLORS.sageGreen,
     },
-    secondaryButtonText: {
-        color: COLORS.sageGreen,
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: COLORS.sageGreen,
+        marginRight: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    checkboxChecked: {
+        backgroundColor: COLORS.sageGreen,
+    },
+    checkmark: {
+        color: COLORS.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    activityText: {
         fontSize: 16,
-        fontWeight: '600',
+        color: COLORS.darkBlueGrey,
+        flex: 1,
+    },
+    activityTextChecked: {
+        color: COLORS.sageGreen,
+        textDecorationLine: 'line-through',
+    },
+    separator: {
+        height: 2,
+        backgroundColor: '#E0E0E0',
+        width: '40%',
+        alignSelf: 'center',
+        marginBottom: 32,
+        marginTop: 8,
+    },
+    closingText: {
+        fontSize: 16,
+        color: COLORS.blueGrey,
         textAlign: 'center',
-        letterSpacing: 0.5,
+        lineHeight: 24,
+        fontStyle: 'italic',
+        marginBottom: 40,
     },
 });
