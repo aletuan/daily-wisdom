@@ -1,19 +1,21 @@
 # Youth Wisdom
 
-**Youth Wisdom** is a mobile application designed to be a daily living adviser for young people. It provides inspiring quotes and actionable steps to help users navigate life's journey with purpose and confidence.
+**Youth Wisdom** is a mobile application designed to be a daily living adviser for young people. It combines the timeless wisdom of famous quotes with modern AI coaching to help users navigate life's journey with purpose and confidence.
 
 ## Features
 
-- **Inspiring Welcome**: A clean and motivating entry point to start your daily journey.
-- **Daily Wisdom**: Get a random famous quote to inspire your day.
-- **Actionable Steps**: Each quote comes with a set of 3 practical todo items.
-- **Interactive Checklist**: Track your progress by marking actionable steps as complete.
+- **AI Wisdom Coach**: A personalized onboarding flow that understands your current focus (e.g., Finding Direction, Building Habits).
+- **Emotion Tracking**: Share how you're feeling (Overwhelmed vs. Hopeful, Stuck vs. Making Progress) to get relevant advice.
+- **Personalized Wisdom**: Uses the Claude API to curate famous quotes that speak directly to your current state.
+- **Deep Insights**: Explains *why* this specific wisdom matters for you today.
+- **Actionable Steps**: Provides 3 simple, interactive steps you can take right now to embody the wisdom.
+- **Minimalist Design**: A distraction-free interface that encourages you to sit with the wisdom.
 
 ## Screenshots
 
 <div style="display: flex; flex-direction: row; gap: 20px;">
   <img src="assets/screenshot-welcome.png" alt="Welcome Screen" width="250" />
-  <img src="assets/screenshot-quote.png" alt="Quote Screen" width="250" />
+  <img src="assets/screenshot-quote.png" alt="Wisdom Screen" width="250" />
 </div>
 
 ## Getting Started
@@ -23,6 +25,7 @@
 - Node.js
 - npm or yarn
 - Expo Go app (on your mobile device) or an iOS/Android simulator.
+- **Anthropic API Key**: Required for the AI features.
 
 ### Installation
 
@@ -37,11 +40,18 @@
     npm install
     ```
 
+3.  **Configure API Key**:
+    - Create a `.env` file in the root directory (copy from `.env.example`).
+    - Add your Anthropic API key:
+      ```
+      ANTHROPIC_API_KEY=sk-ant-your-key-here
+      ```
+
 ### Running the App
 
 1.  Start the Expo development server:
     ```bash
-    npx expo start
+    npx expo start --clear
     ```
 
 2.  Run on your device or simulator:
@@ -61,20 +71,18 @@ If the Expo Go app on your phone gets stuck or shows a timeout error when trying
     ```
     *Note: This may require installing `@expo/ngrok` when prompted.*
 
-### Port Already in Use
-If you see an error that port 8081 is busy:
-1.  Kill the process occupying the port:
-    ```bash
-    lsof -i :8081
-    kill -9 <PID>
-    ```
-2.  Or simply restart Expo, and it will ask to use a different port (e.g., 8082).
+### API Errors
+If you see an error generating wisdom:
+1.  Check that your `ANTHROPIC_API_KEY` is correct in `.env`.
+2.  Ensure you have credits in your Anthropic account.
+3.  Restart the server with `npx expo start --clear` to ensure environment variables are reloaded.
 
 ## Technologies
 
 - **React Native**: For building the mobile UI.
 - **Expo**: For easy development and deployment.
 - **React Navigation**: For seamless screen transitions.
+- **Anthropic Claude API**: For generating personalized wisdom and insights.
 
 ## License
 
