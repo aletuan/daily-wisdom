@@ -13,9 +13,11 @@
 
 ## Screenshots
 
-<div style="display: flex; flex-direction: row; gap: 20px;">
-  <img src="assets/screenshot-welcome.png" alt="Welcome Screen" width="250" />
-  <img src="assets/screenshot-quote.png" alt="Wisdom Screen" width="250" />
+<div style="display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap;">
+  <img src="assets/screenshot-1.png" alt="Screenshot 1" width="200" />
+  <img src="assets/screenshot-2.png" alt="Screenshot 2" width="200" />
+  <img src="assets/screenshot-3.png" alt="Screenshot 3" width="200" />
+  <img src="assets/screenshot-4.png" alt="Screenshot 4" width="200" />
 </div>
 </div>
 

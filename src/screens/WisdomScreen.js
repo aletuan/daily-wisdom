@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 
@@ -28,6 +28,10 @@ export default function WisdomScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Animation values
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(20)).current;
+
     useEffect(() => {
         loadWisdom();
     }, []);
@@ -35,10 +39,30 @@ export default function WisdomScreen({ route, navigation }) {
     const loadWisdom = async () => {
         setLoading(true);
         setError(null);
+        // Reset animation
+        fadeAnim.setValue(0);
+        slideAnim.setValue(20);
 
         try {
             const result = await generatePersonalizedWisdom(context, emotions);
             setWisdom(result);
+
+            // Trigger animation after a brief delay to ensure render
+            setTimeout(() => {
+                Animated.parallel([
+                    Animated.timing(fadeAnim, {
+                        toValue: 1,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(slideAnim, {
+                        toValue: 0,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                ]).start();
+            }, 100);
+
         } catch (err) {
             console.error('Error generating wisdom:', err);
             setError('Unable to generate wisdom right now. Please try again.');
@@ -69,7 +93,12 @@ export default function WisdomScreen({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                 ) : wisdom && (
-                    <>
+                    <Animated.View
+                        style={{
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }]
+                        }}
+                    >
                         <View style={styles.wisdomContainer}>
                             <Text style={styles.quoteText}>"{wisdom.text}"</Text>
                             <Text style={styles.authorText}>- {wisdom.author}</Text>
@@ -95,7 +124,7 @@ export default function WisdomScreen({ route, navigation }) {
                             Take your time with this.{'\n'}
                             We'll come back with you {new Date().getHours() >= 18 ? 'tomorrow' : 'tonight'}.
                         </Text>
-                    </>
+                    </Animated.View>
                 )}
             </ScrollView>
 
