@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
+import { Asset } from 'expo-asset';
 import {
   Lora_400Regular,
   Lora_600SemiBold,
@@ -13,6 +14,7 @@ import {
 import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
+  const [isReady, setIsReady] = useState(false);
   const [fontsLoaded] = useFonts({
     Lora_400Regular,
     Lora_600SemiBold,
@@ -21,7 +23,23 @@ export default function App() {
     Inter_600SemiBold,
   });
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    async function loadAssets() {
+      try {
+        await Asset.loadAsync([
+          require('./assets/welcome-image.png'),
+        ]);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    loadAssets();
+  }, []);
+
+  if (!fontsLoaded || !isReady) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
