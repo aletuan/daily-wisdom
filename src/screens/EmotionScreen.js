@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import EmotionSlider from '../components/EmotionSlider';
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     },
     hint: {
         fontSize: 14,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         fontStyle: 'italic',
         textAlign: 'center',
     },

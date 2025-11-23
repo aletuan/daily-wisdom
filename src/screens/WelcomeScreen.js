@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 15,
         textAlign: 'center',
-        color: COLORS.darkGreen, // Darker Green for title
+        color: COLORS.textMain, // Darker Green for title
         letterSpacing: 1,
     },
     subtitle: {
         fontSize: 18,
-        color: COLORS.blueGrey, // Blue Grey for subtitle
+        color: COLORS.textSecondary, // Blue Grey for subtitle
         marginBottom: 30,
         textAlign: 'center',
         lineHeight: 26,

@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 14,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         fontWeight: '500',
     },
     slider: {

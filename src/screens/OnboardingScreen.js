@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     },
     question: {
         fontSize: 18,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         marginBottom: 32,
         lineHeight: 26,
     },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 16,
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         borderWidth: 2,
         borderColor: COLORS.sageGreen,
         minHeight: 120,

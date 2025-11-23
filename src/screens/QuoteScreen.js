@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         textAlign: 'center',
         marginBottom: 20,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         lineHeight: 34,
     },
     authorText: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: COLORS.mediumGrey,
+        color: COLORS.textSecondary,
         letterSpacing: 0.5,
     },
     todoItem: {
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
     todoText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         flex: 1,
         lineHeight: 24,
     },

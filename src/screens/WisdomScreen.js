@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     loadingText: {
         marginTop: 16,
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
     },
     errorContainer: {
         alignItems: 'center',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     },
     errorText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         textAlign: 'center',
         marginBottom: 20,
     },
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     quoteText: {
         fontSize: 24,
         fontStyle: 'italic',
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         lineHeight: 36,
         marginBottom: 16,
     },
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     },
     whyThisText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         lineHeight: 26,
     },
     activitiesContainer: {
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     },
     activityText: {
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         flex: 1,
     },
     activityTextChecked: {
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     },
     closingText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         textAlign: 'center',
         lineHeight: 24,
         fontStyle: 'italic',

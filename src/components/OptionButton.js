@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         textAlign: 'center',
         fontWeight: '500',
     },
