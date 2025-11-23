@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 
 export default function WelcomeScreen({ navigation }) {
     const handlePress = () => {
@@ -10,8 +11,8 @@ export default function WelcomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.title}>Youth Wisdom</Text>
-                <Text style={styles.subtitle}>Your daily guide to navigating life's journey.</Text>
+                <Text style={[styles.title, TYPOGRAPHY.h1]}>Youth Wisdom</Text>
+                <Text style={[styles.subtitle, TYPOGRAPHY.body]}>Your daily guide to navigating life's journey.</Text>
 
                 <Image
                     source={require('../../assets/welcome-image.png')}
@@ -20,7 +21,7 @@ export default function WelcomeScreen({ navigation }) {
                 />
 
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
-                    <Text style={styles.buttonText}>Start Your Journey</Text>
+                    <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Start Your Journey</Text>
                 </TouchableOpacity>
             </View>
         </View>

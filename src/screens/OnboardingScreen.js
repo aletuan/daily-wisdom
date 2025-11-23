@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
 import OptionButton from '../components/OptionButton';
 
@@ -27,9 +28,9 @@ export default function OnboardingScreen({ navigation }) {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                <Text style={styles.greeting}>Hi, I'm here to walk with you on your journey.</Text>
+                <Text style={[styles.greeting, TYPOGRAPHY.h2]}>Hi, I'm here to walk with you on your journey.</Text>
 
-                <Text style={styles.question}>Let's start simple - what brings you here today?</Text>
+                <Text style={[styles.question, TYPOGRAPHY.body]}>Let's start simple - what brings you here today?</Text>
 
                 <View style={styles.optionsContainer}>
                     {ONBOARDING_OPTIONS.map((option) => (
@@ -44,7 +45,7 @@ export default function OnboardingScreen({ navigation }) {
 
                 {isCustomSelected && (
                     <TextInput
-                        style={styles.customInput}
+                        style={[styles.customInput, TYPOGRAPHY.body]}
                         placeholder="Tell me what's on your mind..."
                         placeholderTextColor={COLORS.blueGrey}
                         value={customText}
@@ -63,7 +64,7 @@ export default function OnboardingScreen({ navigation }) {
                     disabled={!canContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={styles.continueButtonText}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
                 </TouchableOpacity>
             </View>
         </View>

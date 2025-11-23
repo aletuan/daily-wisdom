@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 
 export default function EmotionSlider({ leftLabel, rightLabel, value, onValueChange }) {
     return (
         <View style={styles.container}>
             <View style={styles.labelsContainer}>
-                <Text style={styles.label}>{leftLabel}</Text>
-                <Text style={styles.label}>{rightLabel}</Text>
+                <Text style={[styles.label, TYPOGRAPHY.caption]}>{leftLabel}</Text>
+                <Text style={[styles.label, TYPOGRAPHY.caption]}>{rightLabel}</Text>
             </View>
             <Slider
                 style={styles.slider}

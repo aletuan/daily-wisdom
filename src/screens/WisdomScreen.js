@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 
 const ActivityItem = ({ text }) => {
@@ -78,12 +79,12 @@ export default function WisdomScreen({ route, navigation }) {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                <Text style={styles.header}>Here's something for you today...</Text>
+                <Text style={[styles.header, TYPOGRAPHY.h3]}>Here's something for you today...</Text>
 
                 {loading ? (
                     <View style={styles.loadingContainer}>
                         <ActivityIndicator size="large" color={COLORS.sageGreen} />
-                        <Text style={styles.loadingText}>Curating wisdom...</Text>
+                        <Text style={[styles.loadingText, TYPOGRAPHY.body]}>Curating wisdom...</Text>
                     </View>
                 ) : error ? (
                     <View style={styles.errorContainer}>
@@ -100,17 +101,17 @@ export default function WisdomScreen({ route, navigation }) {
                         }}
                     >
                         <View style={styles.wisdomContainer}>
-                            <Text style={styles.quoteText}>"{wisdom.text}"</Text>
-                            <Text style={styles.authorText}>- {wisdom.author}</Text>
+                            <Text style={[styles.quoteText, TYPOGRAPHY.quote]}>"{wisdom.text}"</Text>
+                            <Text style={[styles.authorText, TYPOGRAPHY.h3]}>- {wisdom.author}</Text>
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionHeader}>Why this today</Text>
-                            <Text style={styles.whyThisText}>{wisdom.why_this}</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Why this today</Text>
+                            <Text style={[styles.whyThisText, TYPOGRAPHY.body]}>{wisdom.why_this}</Text>
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionHeader}>Try these steps</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Try these steps</Text>
                             <View style={styles.activitiesContainer}>
                                 {wisdom.activities?.map((activity, index) => (
                                     <ActivityItem key={index} text={activity} />
@@ -120,7 +121,7 @@ export default function WisdomScreen({ route, navigation }) {
 
                         <View style={styles.separator} />
 
-                        <Text style={styles.closingText}>
+                        <Text style={[styles.closingText, TYPOGRAPHY.body, { fontStyle: 'italic' }]}>
                             Take your time with this.{'\n'}
                             We'll come back with you {new Date().getHours() >= 18 ? 'tomorrow' : 'tonight'}.
                         </Text>

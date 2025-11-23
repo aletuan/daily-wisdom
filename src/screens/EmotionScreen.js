@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 import EmotionSlider from '../components/EmotionSlider';
 
 export default function EmotionScreen({ route, navigation }) {
@@ -21,7 +23,7 @@ export default function EmotionScreen({ route, navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.question}>And how are you feeling about this right now?</Text>
+                <Text style={[styles.question, TYPOGRAPHY.h2]}>And how are you feeling about this right now?</Text>
 
                 <View style={styles.slidersContainer}>
                     <EmotionSlider
@@ -39,7 +41,7 @@ export default function EmotionScreen({ route, navigation }) {
                     />
                 </View>
 
-                <Text style={styles.hint}>
+                <Text style={[styles.hint, TYPOGRAPHY.caption, { fontStyle: 'italic' }]}>
                     There's no right answer here. Just be honest with yourself.
                 </Text>
             </View>
@@ -50,7 +52,7 @@ export default function EmotionScreen({ route, navigation }) {
                     onPress={handleContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={styles.continueButtonText}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
                 </TouchableOpacity>
             </View>
         </View>
