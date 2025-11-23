@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 
 export default function OptionButton({ label, selected, onPress }) {
     return (
@@ -9,7 +10,7 @@ export default function OptionButton({ label, selected, onPress }) {
             onPress={onPress}
             activeOpacity={0.7}
         >
-            <Text style={[styles.text, selected && styles.textSelected]}>
+            <Text style={[styles.text, selected && styles.textSelected, TYPOGRAPHY.body]}>
                 {label}
             </Text>
         </TouchableOpacity>
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         textAlign: 'center',
         fontWeight: '500',
     },

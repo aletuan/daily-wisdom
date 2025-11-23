@@ -28,14 +28,14 @@ Task: Select a famous quote (real quote by a real person) that perfectly address
 Output format: JSON with the following fields:
 - "text": The exact text of the quote
 - "author": The name of the person who said it
-- "why_this": A profound but friendly explanation (2-3 sentences) of why this quote fits their current state. Acknowledge their feelings and explain how this wisdom offers a shift in perspective.
+- "why_this": A profound but friendly explanation (2-3 sentences) of why this quote fits their current state. Speak directly to the user as a close friend using 'I' and 'You'. Acknowledge their feelings and explain how this wisdom offers a shift in perspective.
 - "activities": An array of 3 simple, actionable steps (max 10 words each) the user can take right now to embody this wisdom.
 
 Example output:
 {
   "text": "The only way out is through.",
   "author": "Robert Frost",
-  "why_this": "It's completely natural to feel stuck when facing a big challenge. This quote reminds us that the uncomfortable feelings aren't a sign to stop, but actually the doorway to your next breakthrough.",
+  "why_this": "I chose this for you because I know you've been feeling stuck lately, and I wanted to remind you that these uncomfortable feelings aren't a sign to stop, but actually the doorway to your next breakthrough.",
   "activities": [
     "Take 3 deep breaths right now.",
     "Write down one thing you're grateful for.",

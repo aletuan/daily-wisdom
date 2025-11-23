@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated } from 'react-native';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 
 const ActivityItem = ({ text }) => {
@@ -28,6 +29,10 @@ export default function WisdomScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Animation values
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(20)).current;
+
     useEffect(() => {
         loadWisdom();
     }, []);
@@ -35,10 +40,30 @@ export default function WisdomScreen({ route, navigation }) {
     const loadWisdom = async () => {
         setLoading(true);
         setError(null);
+        // Reset animation
+        fadeAnim.setValue(0);
+        slideAnim.setValue(20);
 
         try {
             const result = await generatePersonalizedWisdom(context, emotions);
             setWisdom(result);
+
+            // Trigger animation after a brief delay to ensure render
+            setTimeout(() => {
+                Animated.parallel([
+                    Animated.timing(fadeAnim, {
+                        toValue: 1,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(slideAnim, {
+                        toValue: 0,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                ]).start();
+            }, 100);
+
         } catch (err) {
             console.error('Error generating wisdom:', err);
             setError('Unable to generate wisdom right now. Please try again.');
@@ -54,12 +79,12 @@ export default function WisdomScreen({ route, navigation }) {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                <Text style={styles.header}>Here's something for you today...</Text>
+                <Text style={[styles.header, TYPOGRAPHY.h3]}>Here's something for you today...</Text>
 
                 {loading ? (
                     <View style={styles.loadingContainer}>
                         <ActivityIndicator size="large" color={COLORS.sageGreen} />
-                        <Text style={styles.loadingText}>Curating wisdom...</Text>
+                        <Text style={[styles.loadingText, TYPOGRAPHY.body]}>Curating wisdom...</Text>
                     </View>
                 ) : error ? (
                     <View style={styles.errorContainer}>
@@ -69,19 +94,24 @@ export default function WisdomScreen({ route, navigation }) {
                         </TouchableOpacity>
                     </View>
                 ) : wisdom && (
-                    <>
+                    <Animated.View
+                        style={{
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }]
+                        }}
+                    >
                         <View style={styles.wisdomContainer}>
-                            <Text style={styles.quoteText}>"{wisdom.text}"</Text>
-                            <Text style={styles.authorText}>- {wisdom.author}</Text>
+                            <Text style={[styles.quoteText, TYPOGRAPHY.quote]}>"{wisdom.text}"</Text>
+                            <Text style={[styles.authorText, TYPOGRAPHY.h3]}>- {wisdom.author}</Text>
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionHeader}>Why this today</Text>
-                            <Text style={styles.whyThisText}>{wisdom.why_this}</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Why this today</Text>
+                            <Text style={[styles.whyThisText, TYPOGRAPHY.body]}>{wisdom.why_this}</Text>
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionHeader}>Try these steps</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Try these steps</Text>
                             <View style={styles.activitiesContainer}>
                                 {wisdom.activities?.map((activity, index) => (
                                     <ActivityItem key={index} text={activity} />
@@ -91,11 +121,11 @@ export default function WisdomScreen({ route, navigation }) {
 
                         <View style={styles.separator} />
 
-                        <Text style={styles.closingText}>
+                        <Text style={[styles.closingText, TYPOGRAPHY.body, { fontStyle: 'italic' }]}>
                             Take your time with this.{'\n'}
                             We'll come back with you {new Date().getHours() >= 18 ? 'tomorrow' : 'tonight'}.
                         </Text>
-                    </>
+                    </Animated.View>
                 )}
             </ScrollView>
 
@@ -106,7 +136,7 @@ export default function WisdomScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
     },
     scrollView: {
         flex: 1,
@@ -128,7 +158,7 @@ const styles = StyleSheet.create({
     loadingText: {
         marginTop: 16,
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
     },
     errorContainer: {
         alignItems: 'center',
@@ -136,7 +166,7 @@ const styles = StyleSheet.create({
     },
     errorText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         textAlign: 'center',
         marginBottom: 20,
     },
@@ -167,7 +197,7 @@ const styles = StyleSheet.create({
     quoteText: {
         fontSize: 24,
         fontStyle: 'italic',
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         lineHeight: 36,
         marginBottom: 16,
     },
@@ -189,7 +219,7 @@ const styles = StyleSheet.create({
     },
     whyThisText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         lineHeight: 26,
     },
     activitiesContainer: {
@@ -228,7 +258,7 @@ const styles = StyleSheet.create({
     },
     activityText: {
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         flex: 1,
     },
     activityTextChecked: {
@@ -245,7 +275,7 @@ const styles = StyleSheet.create({
     },
     closingText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         textAlign: 'center',
         lineHeight: 24,
         fontStyle: 'italic',

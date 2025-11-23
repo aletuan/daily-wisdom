@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
 import OptionButton from '../components/OptionButton';
 
 export default function OnboardingScreen({ navigation }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
+    const scrollViewRef = useRef(null);
+    const headerHeight = useHeaderHeight();
 
     const handleContinue = () => {
         const context = selectedOption === 'custom' ? customText :
@@ -21,15 +25,21 @@ export default function OnboardingScreen({ navigation }) {
     const canContinue = selectedOption && (!isCustomSelected || customText.trim().length > 0);
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={headerHeight}
+        >
             <ScrollView
+                ref={scrollViewRef}
                 style={styles.scrollView}
-                contentContainerStyle={styles.content}
+                contentContainerStyle={[styles.content, isCustomSelected && { paddingBottom: 200 }]}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
             >
-                <Text style={styles.greeting}>Hi, I'm here to walk with you on your journey.</Text>
+                <Text style={[styles.greeting, TYPOGRAPHY.h2]}>Hi, I'm here to walk with you on your journey.</Text>
 
-                <Text style={styles.question}>Let's start simple - what brings you here today?</Text>
+                <Text style={[styles.question, TYPOGRAPHY.body]}>Let's start simple - what brings you here today?</Text>
 
                 <View style={styles.optionsContainer}>
                     {ONBOARDING_OPTIONS.map((option) => (
@@ -38,17 +48,19 @@ export default function OnboardingScreen({ navigation }) {
                             label={option.label}
                             selected={selectedOption === option.id}
                             onPress={() => setSelectedOption(option.id)}
+                            variant={option.id === 'custom' ? 'dashed' : 'solid'}
                         />
                     ))}
                 </View>
 
                 {isCustomSelected && (
                     <TextInput
-                        style={styles.customInput}
+                        style={[styles.customInput, TYPOGRAPHY.body]}
                         placeholder="Tell me what's on your mind..."
                         placeholderTextColor={COLORS.blueGrey}
                         value={customText}
                         onChangeText={setCustomText}
+                        onFocus={() => setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 300)}
                         multiline
                         numberOfLines={4}
                         textAlignVertical="top"
@@ -63,17 +75,17 @@ export default function OnboardingScreen({ navigation }) {
                     disabled={!canContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={styles.continueButtonText}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
     },
     scrollView: {
         flex: 1,
@@ -91,7 +103,7 @@ const styles = StyleSheet.create({
     },
     question: {
         fontSize: 18,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         marginBottom: 32,
         lineHeight: 26,
     },
@@ -103,7 +115,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 16,
         fontSize: 16,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         borderWidth: 2,
         borderColor: COLORS.sageGreen,
         minHeight: 120,
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
     footer: {
         padding: 24,
         paddingBottom: 40,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
         borderTopWidth: 1,
         borderTopColor: '#E0E0E0',
     },

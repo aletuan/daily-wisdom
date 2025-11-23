@@ -13,11 +13,31 @@
 
 ## Screenshots
 
-<div style="display: flex; flex-direction: row; gap: 20px;">
-  <img src="assets/screenshot-welcome.png" alt="Welcome Screen" width="250" />
-  <img src="assets/screenshot-quote.png" alt="Wisdom Screen" width="250" />
+<div style="display: flex; flex-direction: row; gap: 10px; flex-wrap: wrap;">
+  <img src="assets/screenshot-1.png" alt="Screenshot 1" width="200" />
+  <img src="assets/screenshot-2.png" alt="Screenshot 2" width="200" />
+  <img src="assets/screenshot-3.png" alt="Screenshot 3" width="200" />
+  <img src="assets/screenshot-4.png" alt="Screenshot 4" width="200" />
+</div>
 </div>
 
+## How it Works
+
+1.  **Start**: Begin your journey from the Welcome screen.
+2.  **Context**: Select what you're focusing on (e.g., "Finding direction").
+3.  **Emotion**: Use sliders to share how you're feeling right now.
+4.  **Wisdom**: Receive a personalized famous quote, a deep explanation of why it fits your state, and actionable steps.
+
+## API Costs & Privacy
+
+### Costs
+- **Model**: `claude-3-haiku-20240307` (High speed, low cost)
+- **Estimated Cost**: ~$0.0001 per wisdom generation (approx. 150 tokens)
+
+### Privacy
+- User inputs (context and emotions) are sent to the Claude API for generation.
+- No personal data is stored on Anthropic's servers beyond the API call.
+- The app does not store your history permanently (yet).
 ## Getting Started
 
 ### Prerequisites

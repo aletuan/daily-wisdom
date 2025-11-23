@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { QUOTES } from '../data/quotes';
 import { COLORS } from '../styles/colors';
+import { TYPOGRAPHY } from '../styles/typography';
 
 export default function QuoteScreen() {
     const [quote, setQuote] = useState({ text: '', author: '', todos: [] });
@@ -31,13 +32,13 @@ export default function QuoteScreen() {
     return (
         <View style={styles.container}>
             <View style={styles.quoteContainer}>
-                <Text style={styles.quoteText}>"{quote.text}"</Text>
-                <Text style={styles.authorText}>- {quote.author}</Text>
+                <Text style={[styles.quoteText, TYPOGRAPHY.quote]}>"{quote.text}"</Text>
+                <Text style={[styles.authorText, TYPOGRAPHY.h3]}>- {quote.author}</Text>
             </View>
 
             {quote.todos && quote.todos.length > 0 && (
                 <View style={styles.todoContainer}>
-                    <Text style={styles.todoTitle}>Actionable Steps:</Text>
+                    <Text style={[styles.todoTitle, TYPOGRAPHY.h3]}>Actionable Steps:</Text>
                     {quote.todos.map((todo, index) => {
                         const isCompleted = completedTodos.includes(index);
                         return (
@@ -49,7 +50,7 @@ export default function QuoteScreen() {
                                 <View style={[styles.checkbox, isCompleted && styles.checkboxChecked]}>
                                     {isCompleted && <Text style={styles.checkmark}>✓</Text>}
                                 </View>
-                                <Text style={[styles.todoText, isCompleted && styles.todoTextCompleted]}>
+                                <Text style={[styles.todoText, isCompleted && styles.todoTextCompleted, TYPOGRAPHY.body]}>
                                     {todo}
                                 </Text>
                             </TouchableOpacity>
@@ -59,7 +60,7 @@ export default function QuoteScreen() {
             )}
 
             <TouchableOpacity style={styles.button} onPress={getRandomQuote}>
-                <Text style={styles.buttonText}>New Quote</Text>
+                <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>New Quote</Text>
             </TouchableOpacity>
         </View>
     );
@@ -68,7 +69,7 @@ export default function QuoteScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         textAlign: 'center',
         marginBottom: 20,
-        color: COLORS.darkBlueGrey,
+        color: COLORS.textMain,
         lineHeight: 34,
     },
     authorText: {
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: COLORS.mediumGrey,
+        color: COLORS.textSecondary,
         letterSpacing: 0.5,
     },
     todoItem: {
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     },
     todoText: {
         fontSize: 16,
-        color: COLORS.blueGrey,
+        color: COLORS.textSecondary,
         flex: 1,
         lineHeight: 24,
     },
