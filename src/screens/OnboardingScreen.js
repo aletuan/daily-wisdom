@@ -74,7 +74,7 @@ export default function OnboardingScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
     },
     scrollView: {
         flex: 1,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     footer: {
         padding: 24,
         paddingBottom: 40,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
         borderTopWidth: 1,
         borderTopColor: '#E0E0E0',
     },

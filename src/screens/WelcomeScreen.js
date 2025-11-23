@@ -31,7 +31,7 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite, // Soft Off-White
+        backgroundColor: COLORS.white, // White background
         alignItems: 'center',
         justifyContent: 'center',
     },

@@ -69,7 +69,7 @@ export default function QuoteScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,

@@ -136,7 +136,7 @@ export default function WisdomScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.softOffWhite,
+        backgroundColor: COLORS.white,
     },
     scrollView: {
         flex: 1,
