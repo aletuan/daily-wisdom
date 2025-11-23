@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
@@ -8,6 +9,8 @@ import OptionButton from '../components/OptionButton';
 export default function OnboardingScreen({ navigation }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
+    const scrollViewRef = useRef(null);
+    const headerHeight = useHeaderHeight();
 
     const handleContinue = () => {
         const context = selectedOption === 'custom' ? customText :
@@ -22,11 +25,17 @@ export default function OnboardingScreen({ navigation }) {
     const canContinue = selectedOption && (!isCustomSelected || customText.trim().length > 0);
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={headerHeight}
+        >
             <ScrollView
+                ref={scrollViewRef}
                 style={styles.scrollView}
-                contentContainerStyle={styles.content}
+                contentContainerStyle={[styles.content, isCustomSelected && { paddingBottom: 200 }]}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
             >
                 <Text style={[styles.greeting, TYPOGRAPHY.h2]}>Hi, I'm here to walk with you on your journey.</Text>
 
@@ -39,6 +48,7 @@ export default function OnboardingScreen({ navigation }) {
                             label={option.label}
                             selected={selectedOption === option.id}
                             onPress={() => setSelectedOption(option.id)}
+                            variant={option.id === 'custom' ? 'dashed' : 'solid'}
                         />
                     ))}
                 </View>
@@ -50,6 +60,7 @@ export default function OnboardingScreen({ navigation }) {
                         placeholderTextColor={COLORS.blueGrey}
                         value={customText}
                         onChangeText={setCustomText}
+                        onFocus={() => setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 300)}
                         multiline
                         numberOfLines={4}
                         textAlignVertical="top"
@@ -67,7 +78,7 @@ export default function OnboardingScreen({ navigation }) {
                     <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 
