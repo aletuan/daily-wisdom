@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Keyboa
 import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS } from '../styles/colors';
 import { FONTS, TYPOGRAPHY } from '../styles/typography';
-import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
+import { getOnboardingOptions } from '../data/onboardingOptions';
+import { ONBOARDING_CONTENT } from '../data/onboardingContent';
 import OptionButton from '../components/OptionButton';
 import SelectionCard from '../components/SelectionCard';
 import DirectionIcon from '../components/icons/DirectionIcon';
@@ -18,7 +19,11 @@ const ICONS = {
     growth: GrowthIcon,
 };
 
-export default function OnboardingScreen({ navigation }) {
+export default function OnboardingScreen({ navigation, route }) {
+    const language = route.params?.language || 'en';
+    const t = ONBOARDING_CONTENT[language];
+    const options = getOnboardingOptions(language);
+
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
     const scrollViewRef = useRef(null);
@@ -52,7 +57,7 @@ export default function OnboardingScreen({ navigation }) {
 
     const handleContinue = () => {
         const context = selectedOption === 'custom' ? customText :
-            ONBOARDING_OPTIONS.find(opt => opt.id === selectedOption)?.label;
+            options.find(opt => opt.id === selectedOption)?.label;
 
         if (context) {
             navigation.navigate('Emotion', { context });
@@ -77,11 +82,11 @@ export default function OnboardingScreen({ navigation }) {
             >
                 {!isCustomSelected && (
                     <>
-                        <Text style={[styles.greeting, TYPOGRAPHY.h2]}>Hi, I'm here to walk with you on your journey.</Text>
-                        <Text style={[styles.question, TYPOGRAPHY.body]}>Let's start simple - what brings you here today?</Text>
+                        <Text style={[styles.greeting, TYPOGRAPHY.h2]}>{t.greeting}</Text>
+                        <Text style={[styles.question, TYPOGRAPHY.body]}>{t.question}</Text>
 
                         <View style={styles.gridContainer}>
-                            {ONBOARDING_OPTIONS.filter(opt => opt.id !== 'custom').map((option) => (
+                            {options.filter(opt => opt.id !== 'custom').map((option) => (
                                 <SelectionCard
                                     key={option.id}
                                     label={option.label}
@@ -94,7 +99,7 @@ export default function OnboardingScreen({ navigation }) {
 
                         <View style={styles.customOptionContainer}>
                             <OptionButton
-                                label={ONBOARDING_OPTIONS.find(opt => opt.id === 'custom').label}
+                                label={options.find(opt => opt.id === 'custom').label}
                                 selected={selectedOption === 'custom'}
                                 onPress={() => handleOptionSelect('custom')}
                                 variant="solid"
@@ -106,13 +111,13 @@ export default function OnboardingScreen({ navigation }) {
                 {isCustomSelected && (
                     <View style={styles.zenContainer}>
                         <TouchableOpacity onPress={handleBackToOptions} style={styles.backLink}>
-                            <Text style={styles.backLinkText}>← Back to options</Text>
+                            <Text style={styles.backLinkText}>{t.backToOptions}</Text>
                         </TouchableOpacity>
 
                         <TextInput
                             ref={inputRef}
                             style={[styles.zenInput, { fontFamily: FONTS.serif.regular }]}
-                            placeholder="Whatever you need to share..."
+                            placeholder={t.customPlaceholder}
                             placeholderTextColor={COLORS.lightGrey}
                             value={customText}
                             onChangeText={setCustomText}
@@ -130,7 +135,7 @@ export default function OnboardingScreen({ navigation }) {
                     disabled={!canContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

@@ -8,7 +8,7 @@ export default function WelcomeScreen({ navigation }) {
     const [language, setLanguage] = useState('en');
 
     const handlePress = () => {
-        navigation.navigate('Onboarding');
+        navigation.navigate('Onboarding', { language });
     };
 
     const t = WELCOME_CONTENT[language];
