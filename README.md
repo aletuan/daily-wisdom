@@ -4,12 +4,14 @@
 
 ## Features
 
-- **AI Wisdom Coach**: A personalized onboarding flow that understands your current focus (e.g., Finding Direction, Building Habits).
+- **Bilingual Support**: Full English and Vietnamese language support with a top-right toggle on the Welcome Screen. The selected language persists throughout the entire user journey.
+- **AI Wisdom Coach**: A personalized onboarding flow with an intuitive grid-based selection interface for your current focus (Finding Direction, Building Habits, Dealing with Stress, Personal Growth).
+- **Zen Mode**: A distraction-free custom input experience with smooth animations and background dimming for journaling your thoughts.
 - **Emotion Tracking**: Share how you're feeling (Overwhelmed vs. Hopeful, Stuck vs. Making Progress) to get relevant advice.
-- **Personalized Wisdom**: Uses the Claude API to curate famous quotes that speak directly to your current state.
-- **Deep Insights**: Explains *why* this specific wisdom matters for you today.
+- **Personalized Wisdom**: Uses the Claude API to curate famous quotes that speak directly to your current state, with language-specific tone (friendly and profound for Vietnamese).
+- **Deep Insights**: Explains *why* this specific wisdom matters for you today in your selected language.
 - **Actionable Steps**: Provides 3 simple, interactive steps you can take right now to embody the wisdom.
-- **Minimalist Design**: A distraction-free interface that encourages you to sit with the wisdom.
+- **Minimalist Design**: A distraction-free interface with smooth animations that encourages you to sit with the wisdom.
 
 ## Screenshots
 
@@ -23,10 +25,11 @@
 
 ## How it Works
 
-1.  **Start**: Begin your journey from the Welcome screen.
-2.  **Context**: Select what you're focusing on (e.g., "Finding direction").
-3.  **Emotion**: Use sliders to share how you're feeling right now.
-4.  **Wisdom**: Receive a personalized famous quote, a deep explanation of why it fits your state, and actionable steps.
+1.  **Welcome**: Choose your preferred language (English or Vietnamese) from the Welcome screen.
+2.  **Start**: Begin your journey with the selected language.
+3.  **Context**: Select what you're focusing on from a grid-based interface or write your own custom thoughts in Zen Mode.
+4.  **Emotion**: Use sliders to share how you're feeling right now.
+5.  **Wisdom**: Receive a personalized famous quote in your selected language, a deep explanation of why it fits your state, and actionable steps.
 
 ## API Costs & Privacy
 
