@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
+import { EMOTION_CONTENT } from '../data/emotionContent';
 import EmotionSlider from '../components/EmotionSlider';
 
 export default function EmotionScreen({ route, navigation }) {
-    const { context } = route.params;
+    const { context, language = 'en' } = route.params;
+    const t = EMOTION_CONTENT[language];
     const [overwhelmedHopeful, setOverwhelmedHopeful] = useState(50);
     const [stuckProgress, setStuckProgress] = useState(50);
 
     const handleContinue = () => {
         navigation.navigate('Wisdom', {
             context,
+            language,
             emotions: {
                 overwhelmedHopeful,
                 stuckProgress,
@@ -22,26 +25,26 @@ export default function EmotionScreen({ route, navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={[styles.question, TYPOGRAPHY.h2]}>And how are you feeling about this right now?</Text>
+                <Text style={[styles.question, TYPOGRAPHY.h2]}>{t.question}</Text>
 
                 <View style={styles.slidersContainer}>
                     <EmotionSlider
-                        leftLabel="Overwhelmed"
-                        rightLabel="Hopeful"
+                        leftLabel={t.overwhelmed}
+                        rightLabel={t.hopeful}
                         value={overwhelmedHopeful}
                         onValueChange={setOverwhelmedHopeful}
                     />
 
                     <EmotionSlider
-                        leftLabel="Stuck"
-                        rightLabel="Making progress"
+                        leftLabel={t.stuck}
+                        rightLabel={t.makingProgress}
                         value={stuckProgress}
                         onValueChange={setStuckProgress}
                     />
                 </View>
 
                 <Text style={[styles.hint, TYPOGRAPHY.caption, { fontStyle: 'italic' }]}>
-                    There's no right answer here. Just be honest with yourself.
+                    {t.hint}
                 </Text>
             </View>
 
@@ -51,7 +54,7 @@ export default function EmotionScreen({ route, navigation }) {
                     onPress={handleContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
                 </TouchableOpacity>
             </View>
         </View>

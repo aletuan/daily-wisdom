@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { QUOTES } from '../data/quotes';
+import { QUOTE_CONTENT } from '../data/quoteContent';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 
-export default function QuoteScreen() {
+export default function QuoteScreen({ route }) {
+    const language = route?.params?.language || 'en';
+    const t = QUOTE_CONTENT[language];
     const [quote, setQuote] = useState({ text: '', author: '', todos: [] });
     const [completedTodos, setCompletedTodos] = useState([]);
 
@@ -38,7 +41,7 @@ export default function QuoteScreen() {
 
             {quote.todos && quote.todos.length > 0 && (
                 <View style={styles.todoContainer}>
-                    <Text style={[styles.todoTitle, TYPOGRAPHY.h3]}>Actionable Steps:</Text>
+                    <Text style={[styles.todoTitle, TYPOGRAPHY.h3]}>{t.actionableSteps}</Text>
                     {quote.todos.map((todo, index) => {
                         const isCompleted = completedTodos.includes(index);
                         return (
@@ -60,7 +63,7 @@ export default function QuoteScreen() {
             )}
 
             <TouchableOpacity style={styles.button} onPress={getRandomQuote}>
-                <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>New Quote</Text>
+                <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.newQuote}</Text>
             </TouchableOpacity>
         </View>
     );

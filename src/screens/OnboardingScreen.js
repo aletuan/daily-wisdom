@@ -1,23 +1,66 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS } from '../styles/colors';
-import { TYPOGRAPHY } from '../styles/typography';
-import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
+import { FONTS, TYPOGRAPHY } from '../styles/typography';
+import { getOnboardingOptions } from '../data/onboardingOptions';
+import { ONBOARDING_CONTENT } from '../data/onboardingContent';
 import OptionButton from '../components/OptionButton';
+import SelectionCard from '../components/SelectionCard';
+import DirectionIcon from '../components/icons/DirectionIcon';
+import HabitIcon from '../components/icons/HabitIcon';
+import StressIcon from '../components/icons/StressIcon';
+import GrowthIcon from '../components/icons/GrowthIcon';
 
-export default function OnboardingScreen({ navigation }) {
+const ICONS = {
+    direction: DirectionIcon,
+    habits: HabitIcon,
+    stress: StressIcon,
+    growth: GrowthIcon,
+};
+
+export default function OnboardingScreen({ navigation, route }) {
+    const language = route.params?.language || 'en';
+    const t = ONBOARDING_CONTENT[language];
+    const options = getOnboardingOptions(language);
+
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
     const scrollViewRef = useRef(null);
+    const inputRef = useRef(null);
     const headerHeight = useHeaderHeight();
+
+    if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+
+    useEffect(() => {
+        if (selectedOption === 'custom') {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            // Small timeout to ensure component is mounted and layout is ready
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+        }
+    }, [selectedOption]);
+
+    const handleOptionSelect = (id) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setSelectedOption(id);
+    };
+
+    const handleBackToOptions = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setSelectedOption(null);
+        setCustomText('');
+    };
 
     const handleContinue = () => {
         const context = selectedOption === 'custom' ? customText :
-            ONBOARDING_OPTIONS.find(opt => opt.id === selectedOption)?.label;
+            options.find(opt => opt.id === selectedOption)?.label;
 
         if (context) {
-            navigation.navigate('Emotion', { context });
+            navigation.navigate('Emotion', { context, language });
         }
     };
 
@@ -37,34 +80,51 @@ export default function OnboardingScreen({ navigation }) {
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={[styles.greeting, TYPOGRAPHY.h2]}>Hi, I'm here to walk with you on your journey.</Text>
+                {!isCustomSelected && (
+                    <>
+                        <Text style={[styles.greeting, TYPOGRAPHY.h2]}>{t.greeting}</Text>
+                        <Text style={[styles.question, TYPOGRAPHY.body]}>{t.question}</Text>
 
-                <Text style={[styles.question, TYPOGRAPHY.body]}>Let's start simple - what brings you here today?</Text>
+                        <View style={styles.gridContainer}>
+                            {options.filter(opt => opt.id !== 'custom').map((option) => (
+                                <SelectionCard
+                                    key={option.id}
+                                    label={option.label}
+                                    icon={ICONS[option.id]}
+                                    selected={selectedOption === option.id}
+                                    onPress={() => handleOptionSelect(option.id)}
+                                />
+                            ))}
+                        </View>
 
-                <View style={styles.optionsContainer}>
-                    {ONBOARDING_OPTIONS.map((option) => (
-                        <OptionButton
-                            key={option.id}
-                            label={option.label}
-                            selected={selectedOption === option.id}
-                            onPress={() => setSelectedOption(option.id)}
-                            variant={option.id === 'custom' ? 'dashed' : 'solid'}
-                        />
-                    ))}
-                </View>
+                        <View style={styles.customOptionContainer}>
+                            <OptionButton
+                                label={options.find(opt => opt.id === 'custom').label}
+                                selected={selectedOption === 'custom'}
+                                onPress={() => handleOptionSelect('custom')}
+                                variant="solid"
+                            />
+                        </View>
+                    </>
+                )}
 
                 {isCustomSelected && (
-                    <TextInput
-                        style={[styles.customInput, TYPOGRAPHY.body]}
-                        placeholder="Tell me what's on your mind..."
-                        placeholderTextColor={COLORS.blueGrey}
-                        value={customText}
-                        onChangeText={setCustomText}
-                        onFocus={() => setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 300)}
-                        multiline
-                        numberOfLines={4}
-                        textAlignVertical="top"
-                    />
+                    <View style={styles.zenContainer}>
+                        <TouchableOpacity onPress={handleBackToOptions} style={styles.backLink}>
+                            <Text style={styles.backLinkText}>{t.backToOptions}</Text>
+                        </TouchableOpacity>
+
+                        <TextInput
+                            ref={inputRef}
+                            style={[styles.zenInput, { fontFamily: FONTS.serif.regular }]}
+                            placeholder={t.customPlaceholder}
+                            placeholderTextColor={COLORS.lightGrey}
+                            value={customText}
+                            onChangeText={setCustomText}
+                            multiline
+                            textAlignVertical="top"
+                        />
+                    </View>
                 )}
             </ScrollView>
 
@@ -75,7 +135,7 @@ export default function OnboardingScreen({ navigation }) {
                     disabled={!canContinue}
                     activeOpacity={0.8}
                 >
-                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Continue</Text>
+                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
@@ -107,19 +167,35 @@ const styles = StyleSheet.create({
         marginBottom: 32,
         lineHeight: 26,
     },
-    optionsContainer: {
+    gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginBottom: 24,
+    },
+    customOptionContainer: {
         marginBottom: 20,
     },
-    customInput: {
-        backgroundColor: COLORS.white,
-        borderRadius: 16,
-        padding: 16,
-        fontSize: 16,
+    zenContainer: {
+        flex: 1,
+        minHeight: 300,
+    },
+    backLink: {
+        marginBottom: 24,
+        alignSelf: 'flex-start',
+    },
+    backLinkText: {
+        color: COLORS.textSecondary,
+        fontSize: 14,
+        fontFamily: FONTS.sans.regular,
+    },
+    zenInput: {
+        fontSize: 24,
         color: COLORS.textMain,
-        borderWidth: 2,
-        borderColor: COLORS.sageGreen,
-        minHeight: 120,
-        marginTop: 8,
+        lineHeight: 34,
+        minHeight: 200,
+        padding: 0,
+        textAlignVertical: 'top',
     },
     footer: {
         padding: 24,

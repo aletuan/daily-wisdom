@@ -1,18 +1,35 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
+import { WELCOME_CONTENT } from '../data/welcomeContent';
 
 export default function WelcomeScreen({ navigation }) {
+    const [language, setLanguage] = useState('en');
+
     const handlePress = () => {
-        navigation.navigate('Onboarding');
+        navigation.navigate('Onboarding', { language });
     };
 
+    const t = WELCOME_CONTENT[language];
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.topBar}>
+                <View style={styles.languageToggle}>
+                    <TouchableOpacity onPress={() => setLanguage('en')}>
+                        <Text style={[styles.langText, language === 'en' && styles.langTextActive]}>EN</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.langDivider}>|</Text>
+                    <TouchableOpacity onPress={() => setLanguage('vi')}>
+                        <Text style={[styles.langText, language === 'vi' && styles.langTextActive]}>VI</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <View style={styles.content}>
-                <Text style={[styles.title, TYPOGRAPHY.h1]}>Youth Wisdom</Text>
-                <Text style={[styles.subtitle, TYPOGRAPHY.body]}>Your daily guide to navigating life's journey.</Text>
+                <Text style={[styles.title, TYPOGRAPHY.h1]}>{t.title}</Text>
+                <Text style={[styles.subtitle, TYPOGRAPHY.body]}>{t.subtitle}</Text>
 
                 <Image
                     source={require('../../assets/welcome-image.png')}
@@ -21,22 +38,46 @@ export default function WelcomeScreen({ navigation }) {
                 />
 
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
-                    <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Start Your Journey</Text>
+                    <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.start}</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.white, // White background
+        backgroundColor: COLORS.white,
+    },
+    topBar: {
+        paddingHorizontal: 24,
+        paddingTop: 10,
+        alignItems: 'flex-end',
+    },
+    languageToggle: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+    },
+    langText: {
+        fontSize: 16,
+        color: COLORS.lightGrey,
+        fontWeight: '600',
+        paddingHorizontal: 4,
+    },
+    langTextActive: {
+        color: COLORS.darkGreen,
+        fontWeight: 'bold',
+    },
+    langDivider: {
+        fontSize: 16,
+        color: COLORS.lightGrey,
+        marginHorizontal: 4,
     },
     content: {
+        flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
         padding: 30,
         width: '100%',
     },
@@ -51,7 +92,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 18,
         color: COLORS.textSecondary, // Blue Grey for subtitle
-        marginBottom: 30,
+        marginBottom: 20,
         textAlign: 'center',
         lineHeight: 26,
         paddingHorizontal: 20,

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
+import { WISDOM_CONTENT } from '../data/wisdomContent';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -24,7 +25,8 @@ const ActivityItem = ({ text }) => {
 };
 
 export default function WisdomScreen({ route, navigation }) {
-    const { context, emotions } = route.params;
+    const { context, emotions, language = 'en' } = route.params;
+    const t = WISDOM_CONTENT[language];
     const [wisdom, setWisdom] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -45,7 +47,7 @@ export default function WisdomScreen({ route, navigation }) {
         slideAnim.setValue(20);
 
         try {
-            const result = await generatePersonalizedWisdom(context, emotions);
+            const result = await generatePersonalizedWisdom(context, emotions, language);
             setWisdom(result);
 
             // Trigger animation after a brief delay to ensure render
@@ -66,7 +68,7 @@ export default function WisdomScreen({ route, navigation }) {
 
         } catch (err) {
             console.error('Error generating wisdom:', err);
-            setError('Unable to generate wisdom right now. Please try again.');
+            setError(t.error);
         } finally {
             setLoading(false);
         }
@@ -79,18 +81,18 @@ export default function WisdomScreen({ route, navigation }) {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                <Text style={[styles.header, TYPOGRAPHY.h3]}>Here's something for you today...</Text>
+                <Text style={[styles.header, TYPOGRAPHY.h3]}>{t.header}</Text>
 
                 {loading ? (
                     <View style={styles.loadingContainer}>
                         <ActivityIndicator size="large" color={COLORS.sageGreen} />
-                        <Text style={[styles.loadingText, TYPOGRAPHY.body]}>Curating wisdom...</Text>
+                        <Text style={[styles.loadingText, TYPOGRAPHY.body]}>{t.loading}</Text>
                     </View>
                 ) : error ? (
                     <View style={styles.errorContainer}>
                         <Text style={styles.errorText}>{error}</Text>
                         <TouchableOpacity style={styles.retryButton} onPress={loadWisdom}>
-                            <Text style={styles.retryButtonText}>Try Again</Text>
+                            <Text style={styles.retryButtonText}>{t.retry}</Text>
                         </TouchableOpacity>
                     </View>
                 ) : wisdom && (
@@ -106,12 +108,12 @@ export default function WisdomScreen({ route, navigation }) {
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Why this today</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>{t.whyThis}</Text>
                             <Text style={[styles.whyThisText, TYPOGRAPHY.body]}>{wisdom.why_this}</Text>
                         </View>
 
                         <View style={styles.sectionContainer}>
-                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>Try these steps</Text>
+                            <Text style={[styles.sectionHeader, TYPOGRAPHY.h3]}>{t.steps}</Text>
                             <View style={styles.activitiesContainer}>
                                 {wisdom.activities?.map((activity, index) => (
                                     <ActivityItem key={index} text={activity} />
@@ -122,8 +124,7 @@ export default function WisdomScreen({ route, navigation }) {
                         <View style={styles.separator} />
 
                         <Text style={[styles.closingText, TYPOGRAPHY.body, { fontStyle: 'italic' }]}>
-                            Take your time with this.{'\n'}
-                            We'll come back with you {new Date().getHours() >= 18 ? 'tomorrow' : 'tonight'}.
+                            {t.closing} {new Date().getHours() >= 18 ? t.tomorrow : t.tonight}.
                         </Text>
                     </Animated.View>
                 )}
