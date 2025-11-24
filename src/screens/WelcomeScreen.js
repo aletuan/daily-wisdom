@@ -2,19 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
-
-const CONTENT = {
-    en: {
-        title: 'Youth Wisdom',
-        subtitle: "Your daily guide to navigating life's journey.",
-        start: 'Start Your Journey',
-    },
-    vi: {
-        title: 'Tuổi Trẻ Thông Thái',
-        subtitle: 'Người bạn đồng hành mỗi ngày trên hành trình cuộc sống.',
-        start: 'Bắt Đầu Hành Trình',
-    }
-};
+import { WELCOME_CONTENT } from '../data/welcomeContent';
 
 export default function WelcomeScreen({ navigation }) {
     const [language, setLanguage] = useState('en');
@@ -23,7 +11,7 @@ export default function WelcomeScreen({ navigation }) {
         navigation.navigate('Onboarding');
     };
 
-    const t = CONTENT[language];
+    const t = WELCOME_CONTENT[language];
 
     return (
         <SafeAreaView style={styles.container}>
