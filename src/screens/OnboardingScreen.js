@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { COLORS } from '../styles/colors';
@@ -22,7 +22,17 @@ export default function OnboardingScreen({ navigation }) {
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
     const scrollViewRef = useRef(null);
+    const inputRef = useRef(null);
     const headerHeight = useHeaderHeight();
+
+    useEffect(() => {
+        if (selectedOption === 'custom') {
+            // Small timeout to ensure component is mounted and layout is ready
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+        }
+    }, [selectedOption]);
 
     const handleContinue = () => {
         const context = selectedOption === 'custom' ? customText :
@@ -76,6 +86,7 @@ export default function OnboardingScreen({ navigation }) {
 
                 {isCustomSelected && (
                     <TextInput
+                        ref={inputRef}
                         style={[styles.customInput, TYPOGRAPHY.body]}
                         placeholder="Tell me what's on your mind..."
                         placeholderTextColor={COLORS.blueGrey}
