@@ -60,7 +60,7 @@ export default function OnboardingScreen({ navigation, route }) {
             options.find(opt => opt.id === selectedOption)?.label;
 
         if (context) {
-            navigation.navigate('Emotion', { context });
+            navigation.navigate('Emotion', { context, language });
         }
     };
 
