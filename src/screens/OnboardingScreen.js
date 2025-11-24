@@ -5,6 +5,18 @@ import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { ONBOARDING_OPTIONS } from '../data/onboardingOptions';
 import OptionButton from '../components/OptionButton';
+import SelectionCard from '../components/SelectionCard';
+import DirectionIcon from '../components/icons/DirectionIcon';
+import HabitIcon from '../components/icons/HabitIcon';
+import StressIcon from '../components/icons/StressIcon';
+import GrowthIcon from '../components/icons/GrowthIcon';
+
+const ICONS = {
+    direction: DirectionIcon,
+    habits: HabitIcon,
+    stress: StressIcon,
+    growth: GrowthIcon,
+};
 
 export default function OnboardingScreen({ navigation }) {
     const [selectedOption, setSelectedOption] = useState(null);
@@ -41,16 +53,25 @@ export default function OnboardingScreen({ navigation }) {
 
                 <Text style={[styles.question, TYPOGRAPHY.body]}>Let's start simple - what brings you here today?</Text>
 
-                <View style={styles.optionsContainer}>
-                    {ONBOARDING_OPTIONS.map((option) => (
-                        <OptionButton
+                <View style={styles.gridContainer}>
+                    {ONBOARDING_OPTIONS.filter(opt => opt.id !== 'custom').map((option) => (
+                        <SelectionCard
                             key={option.id}
                             label={option.label}
+                            icon={ICONS[option.id]}
                             selected={selectedOption === option.id}
                             onPress={() => setSelectedOption(option.id)}
-                            variant={option.id === 'custom' ? 'dashed' : 'solid'}
                         />
                     ))}
+                </View>
+
+                <View style={styles.customOptionContainer}>
+                    <OptionButton
+                        label={ONBOARDING_OPTIONS.find(opt => opt.id === 'custom').label}
+                        selected={selectedOption === 'custom'}
+                        onPress={() => setSelectedOption('custom')}
+                        variant="solid" // Keep solid style for consistency or change if needed
+                    />
                 </View>
 
                 {isCustomSelected && (
@@ -107,7 +128,13 @@ const styles = StyleSheet.create({
         marginBottom: 32,
         lineHeight: 26,
     },
-    optionsContainer: {
+    gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginBottom: 24,
+    },
+    customOptionContainer: {
         marginBottom: 20,
     },
     customInput: {
