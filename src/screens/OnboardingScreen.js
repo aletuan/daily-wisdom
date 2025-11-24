@@ -88,7 +88,7 @@ export default function OnboardingScreen({ navigation }) {
                     <TextInput
                         ref={inputRef}
                         style={[styles.customInput, TYPOGRAPHY.body]}
-                        placeholder="Tell me what's on your mind..."
+                        placeholder="Whatever you need to share..."
                         placeholderTextColor={COLORS.blueGrey}
                         value={customText}
                         onChangeText={setCustomText}

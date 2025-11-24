@@ -4,5 +4,5 @@ export const ONBOARDING_OPTIONS = [
     { id: 'habits', label: 'Building better habits' },
     { id: 'stress', label: 'Dealing with stress' },
     { id: 'growth', label: 'Personal growth' },
-    { id: 'custom', label: 'Let me type my own...' },
+    { id: 'custom', label: "I'll write what I'm feeling" },
 ];
