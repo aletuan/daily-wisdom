@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 24,
-        paddingTop: 40,
+        paddingTop: 10,
     },
     question: {
         fontSize: 22,

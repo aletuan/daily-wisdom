@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 24,
-        paddingTop: 40,
+        paddingTop: 10,
     },
     greeting: {
         fontSize: 24,
