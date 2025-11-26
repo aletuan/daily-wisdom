@@ -5,7 +5,6 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
-import QuoteScreen from '../screens/QuoteScreen';
 import BackArrowIcon from '../components/icons/BackArrowIcon';
 import { COLORS } from '../styles/colors';
 import { FONTS } from '../styles/typography';
@@ -60,11 +59,6 @@ export default function AppNavigator() {
                     name="Wisdom"
                     component={WisdomScreen}
                     options={{ title: 'Your Wisdom' }}
-                />
-                <Stack.Screen
-                    name="Quote"
-                    component={QuoteScreen}
-                    options={{ title: 'Daily Wisdom' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
