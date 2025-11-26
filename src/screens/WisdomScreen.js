@@ -4,6 +4,7 @@ import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 import { WISDOM_CONTENT } from '../data/wisdomContent';
+import AuthorAvatar from '../components/AuthorAvatar';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -103,8 +104,11 @@ export default function WisdomScreen({ route, navigation }) {
                         }}
                     >
                         <View style={styles.wisdomContainer}>
-                            <Text style={[styles.quoteText, TYPOGRAPHY.quote]}>"{wisdom.text}"</Text>
-                            <Text style={[styles.authorText, TYPOGRAPHY.h3]}>- {wisdom.author}</Text>
+                            <AuthorAvatar authorName={wisdom.author} />
+                            <View style={styles.quoteContent}>
+                                <Text style={[styles.quoteText, TYPOGRAPHY.quote]}>"{wisdom.text}"</Text>
+                                <Text style={[styles.authorText, TYPOGRAPHY.h3]}>- {wisdom.author}</Text>
+                            </View>
                         </View>
 
                         <View style={styles.sectionContainer}>
@@ -183,29 +187,24 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     wisdomContainer: {
-        backgroundColor: COLORS.white,
-        padding: 28,
-        borderRadius: 20,
-        marginBottom: 24,
-        borderLeftWidth: 4,
-        borderLeftColor: COLORS.sageGreen,
-        elevation: 2,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 32,
+    },
+    quoteContent: {
+        flex: 1,
     },
     quoteText: {
-        fontSize: 24,
+        fontSize: 16,
         fontStyle: 'italic',
         color: COLORS.textMain,
-        lineHeight: 36,
-        marginBottom: 16,
+        lineHeight: 24,
+        marginBottom: 8,
     },
     authorText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: COLORS.sageGreen,
+        fontSize: 14,
+        fontWeight: '600',
+        color: COLORS.textSecondary,
         textAlign: 'right',
     },
     sectionContainer: {
