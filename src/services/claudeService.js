@@ -24,14 +24,18 @@ export async function generatePersonalizedWisdom(context, emotions, language = '
 
 Context: User is working on "${context}"
 Current feeling: ${emotionState}
-Language: ${language === 'vi' ? 'Vietnamese' : 'English'}
+
+CRITICAL INSTRUCTION - LANGUAGE REQUIREMENT:
+You MUST respond in ${language === 'vi' ? 'VIETNAMESE language ONLY' : 'ENGLISH language ONLY'}.
+Selected language: ${language === 'vi' ? 'Vietnamese (vi)' : 'English (en)'}
+${language === 'vi' ? 'ALL fields must be in Vietnamese. Do NOT use English.' : 'ALL fields must be in English. Do NOT use Vietnamese.'}
 
 Task: Select a famous quote (real quote by a real person) that perfectly addresses this state of mind.
 Output format: JSON with the following fields:
 - "text": The exact text of the quote (translated to ${language === 'vi' ? 'Vietnamese' : 'English'} if needed)
 - "author": The name of the person who said it
-- "why_this": A profound but friendly explanation (2-3 sentences) of why this quote fits their current state. Speak directly to the user as a close friend using 'I' and 'You' (or 'Mình' and 'Bạn' in Vietnamese). ${language === 'vi' ? 'Tone: Friendly, warm, and profound, like a close friend giving their best advice.' : 'Acknowledge their feelings and explain how this wisdom offers a shift in perspective.'}
-- "activities": An array of 3 simple, actionable steps (max 10 words each) the user can take right now to embody this wisdom.
+- "why_this": A profound but friendly explanation (2-3 sentences) of why this quote fits their current state. Speak directly to the user as a close friend using ${language === 'vi' ? "'Mình' and 'Bạn' (Vietnamese pronouns)" : "'I' and 'You'"}. ${language === 'vi' ? 'Tone: Friendly, warm, and profound, like a close friend giving their best advice. Write in Vietnamese.' : 'Acknowledge their feelings and explain how this wisdom offers a shift in perspective. Write in English.'}
+- "activities": An array of 3 simple, actionable steps (max 10 words each) the user can take right now to embody this wisdom. ${language === 'vi' ? 'Write in Vietnamese.' : 'Write in English.'}
 
 Example output (${language === 'vi' ? 'Vietnamese' : 'English'}):
 ${language === 'vi' ? `{

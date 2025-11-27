@@ -51,10 +51,43 @@ The selected language propagates throughout the entire journey via navigation pa
 - Fallback to curated quotes (src/data/quotes.js) if API fails
 - Returns: `{ text, author, why_this, activities }`
 
+#### Avatar Generation Service (src/services/avatarGenerationService.js)
+Multi-tier avatar loading strategy to minimize costs and maximize speed:
+
+**Tier 1: Local Cache (instant)**
+- Checks AsyncStorage and local file system first
+- Returns immediately if avatar was previously loaded
+
+**Tier 2: GitHub CDN (fast, free)**
+- Fetches from https://github.com/aletuan/youth-wisdom-avatars
+- Pre-generated avatars for 200+ famous philosophers/authors
+- Shared across all users (first user downloads, everyone benefits)
+- CDN URL pattern: `https://raw.githubusercontent.com/aletuan/youth-wisdom-avatars/main/avatars/{normalized-name}.png`
+
+**Tier 3: Gemini API (slow, $0.01 per generation)**
+- Only used for rare/obscure authors not in CDN
+- Generates pen-and-ink sketch style portraits using Gemini 2.5 Flash Image API
+- Style: Classical engraving technique, cross-hatching, pure white background
+- Automatically caches locally after generation
+
+**Cost Analysis:**
+- CDN avatars: $0 (free GitHub hosting and bandwidth)
+- Generated avatars: ~$0.01 each (rare, only for unknown authors)
+- Estimated cost: <$5/month for <10k users
+
+**Avatar Repository:**
+- Separate repo: https://github.com/aletuan/youth-wisdom-avatars
+- Batch generation script: `scripts/avatar-cdn/generate-batch.js`
+- Current count: 10 avatars (can scale to 200+)
+- Community-contributable via PR
+
 #### Environment Configuration
-- API key loaded via `react-native-dotenv` and `@env` import
+- API keys loaded via `react-native-dotenv` and `@env` import
 - Babel plugin configured in babel.config.js
 - `.env` file required (see `.env.example`)
+- Required keys:
+  - `ANTHROPIC_API_KEY` - For wisdom generation
+  - `GEMINI_API_KEY` - For avatar generation (fallback only)
 
 ### Key Architectural Patterns
 
@@ -87,8 +120,12 @@ App.js preloads fonts (Lora, Inter) and images using `expo-font` and `expo-asset
 
 ### API Key Setup
 1. Copy `.env.example` to `.env`
-2. Add your Anthropic API key: `ANTHROPIC_API_KEY=sk-ant-...`
+2. Add your API keys:
+   - `ANTHROPIC_API_KEY=sk-ant-...` (required for wisdom generation)
+   - `GEMINI_API_KEY=...` (optional, only for generating new avatars)
 3. Restart with `npx expo start --clear` to reload environment variables
+
+Note: GEMINI_API_KEY is only used when an author's avatar is not found in the CDN. Most users will never trigger Gemini API calls.
 
 ### Network Troubleshooting
 If Expo Go can't connect (timeout/stuck on "Opening project..."):
@@ -96,8 +133,11 @@ If Expo Go can't connect (timeout/stuck on "Opening project..."):
 - Use `npx expo start --tunnel` (may require `@expo/ngrok`)
 
 ### Recent Features
-- Author avatar portraits with pure white backgrounds (assets/avatars/)
-- Bilingual support with top-right language toggle
+- **Avatar CDN System**: Multi-tier loading (local cache → GitHub CDN → Gemini API) with cost optimization
+- **GitHub Avatar Repository**: https://github.com/aletuan/youth-wisdom-avatars (10 avatars, expandable to 200+)
+- **Batch Avatar Generation**: Script to generate avatars in bulk with Gemini API
+- Author avatar portraits with pen-and-ink sketch style, pure white backgrounds
+- Bilingual support (English/Vietnamese) with top-right language toggle
 - Zen Mode custom input with background dimming
 - Grid-based selection interface for focus areas
 
@@ -113,9 +153,47 @@ src/
 └── utils/           # Helper functions
 ```
 
+## Avatar Generation & Management
+
+### Testing Avatar CDN
+```bash
+# Test CDN connectivity and avatar availability
+node scripts/test-avatar-cdn.js
+```
+
+### Generating New Avatars
+Navigate to the avatar CDN repository and run the batch generation script:
+
+```bash
+cd scripts/avatar-cdn
+
+# Generate all remaining avatars (skips existing)
+node generate-batch.js
+
+# Generate specific range (e.g., next 20 avatars)
+node generate-batch.js --start=10 --limit=20
+
+# Custom delay between API calls (default 1000ms)
+node generate-batch.js --delay=2000
+```
+
+### Adding Avatars to CDN
+1. Generate new avatars using the batch script
+2. Commit and push to the youth-wisdom-avatars repository
+3. Avatars are immediately available via GitHub Raw CDN
+4. App will automatically fetch from CDN on next request
+
+### Avatar Naming Convention
+Authors are normalized to lowercase with special characters replaced by hyphens:
+- "Marcus Aurelius" → `marcus-aurelius.png`
+- "Søren Kierkegaard" → `soren-kierkegaard.png`
+- "Lao Tzu" → `lao-tzu.png`
+
 ## Technologies
 - React Native 0.81.5 with React 19.1.0
 - Expo ~54.0.25
 - React Navigation 7.x (native stack)
 - Anthropic SDK 0.70.1
+- Google Gemini 2.5 Flash Image API (avatar generation)
 - AsyncStorage for persistence
+- expo-file-system for local avatar caching
