@@ -75,61 +75,34 @@ async function fetchFromCDN(authorName) {
     try {
         const filename = getAvatarFilename(authorName);
         const cdnUrl = CDN_BASE_URL + filename;
+        const filePath = AVATAR_DIR + filename;
 
         console.log(`Trying to fetch from CDN: ${cdnUrl}`);
 
-        // Fetch with timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), CDN_TIMEOUT);
+        // Ensure directory exists
+        await ensureAvatarDirectory();
 
-        const response = await fetch(cdnUrl, {
-            signal: controller.signal,
-        });
+        // Download with timeout using Promise.race
+        const downloadPromise = FileSystem.downloadAsync(cdnUrl, filePath);
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('CDN fetch timeout')), CDN_TIMEOUT)
+        );
 
-        clearTimeout(timeoutId);
+        const result = await Promise.race([downloadPromise, timeoutPromise]);
 
-        if (!response.ok) {
-            console.log(`Avatar not found on CDN (${response.status})`);
+        // Check if download was successful
+        if (result.status === 200) {
+            // Cache the path
+            await cacheAvatar(authorName, filePath);
+
+            console.log(`Avatar downloaded from CDN and cached for ${authorName}`);
+            return filePath;
+        } else {
+            console.log(`Avatar not found on CDN (${result.status})`);
             return null;
         }
-
-        // Download image as base64
-        const blob = await response.blob();
-        const reader = new FileReader();
-
-        return new Promise((resolve, reject) => {
-            reader.onloadend = async () => {
-                try {
-                    // Extract base64 data (remove data:image/png;base64, prefix)
-                    const base64Data = reader.result.split(',')[1];
-
-                    // Ensure directory exists
-                    await ensureAvatarDirectory();
-
-                    // Save to local file
-                    const filePath = AVATAR_DIR + filename;
-                    await FileSystem.writeAsStringAsync(filePath, base64Data, {
-                        encoding: FileSystem.EncodingType.Base64,
-                    });
-
-                    // Cache the path
-                    await cacheAvatar(authorName, filePath);
-
-                    console.log(`Avatar downloaded from CDN and cached for ${authorName}`);
-                    resolve(filePath);
-                } catch (error) {
-                    console.error('Error saving CDN avatar:', error);
-                    resolve(null);
-                }
-            };
-            reader.onerror = () => {
-                console.error('Error reading blob');
-                resolve(null);
-            };
-            reader.readAsDataURL(blob);
-        });
     } catch (error) {
-        if (error.name === 'AbortError') {
+        if (error.message === 'CDN fetch timeout') {
             console.log('CDN fetch timeout');
         } else {
             console.error('Error fetching from CDN:', error);
