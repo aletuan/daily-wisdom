@@ -12,6 +12,7 @@ import {
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter';
 import AppNavigator from './src/navigation/AppNavigator';
+import ErrorBoundary from './src/components/ErrorBoundary';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -47,5 +48,9 @@ export default function App() {
     );
   }
 
-  return <AppNavigator />;
+  return (
+    <ErrorBoundary>
+      <AppNavigator />
+    </ErrorBoundary>
+  );
 }
