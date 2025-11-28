@@ -232,12 +232,9 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         padding: 16,
         borderRadius: 16,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
     },
     activityItemChecked: {
         backgroundColor: '#F0F7F0', // Very light green
-        borderColor: COLORS.sageGreen,
     },
     checkbox: {
         width: 24,
@@ -264,7 +261,6 @@ const styles = StyleSheet.create({
     },
     activityTextChecked: {
         color: COLORS.sageGreen,
-        textDecorationLine: 'line-through',
     },
     separator: {
         height: 2,

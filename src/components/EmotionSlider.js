@@ -17,9 +17,9 @@ export default function EmotionSlider({ leftLabel, rightLabel, value, onValueCha
                 maximumValue={100}
                 value={value}
                 onValueChange={onValueChange}
-                minimumTrackTintColor={COLORS.sageGreen}
+                minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#E0E0E0"
-                thumbTintColor={COLORS.sageGreen}
+                thumbTintColor="#000000"
             />
         </View>
     );
