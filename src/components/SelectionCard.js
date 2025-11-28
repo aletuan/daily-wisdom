@@ -28,11 +28,11 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         borderWidth: 2,
         borderColor: '#E0E0E0',
-        elevation: 2,
+        elevation: 1,
         shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.03,
+        shadowRadius: 2,
         width: '48%', // Approx half width for 2-column grid
         aspectRatio: 1, // Square shape
         justifyContent: 'center',
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     cardSelected: {
         backgroundColor: '#333333',
         borderColor: '#333333',
-        elevation: 4,
-        shadowOpacity: 0.15,
+        elevation: 2,
+        shadowOpacity: 0.08,
     },
     iconContainer: {
         marginBottom: 16,
