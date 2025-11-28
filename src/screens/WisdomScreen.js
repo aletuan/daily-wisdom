@@ -242,20 +242,21 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     activityItemChecked: {
-        backgroundColor: '#F0F7F0', // Very light green
+        backgroundColor: '#F5F5F5', // Light gray
     },
     checkbox: {
         width: 24,
         height: 24,
         borderRadius: 12,
         borderWidth: 2,
-        borderColor: COLORS.sageGreen,
+        borderColor: '#BEBEBE',
         marginRight: 16,
         alignItems: 'center',
         justifyContent: 'center',
     },
     checkboxChecked: {
-        backgroundColor: COLORS.sageGreen,
+        backgroundColor: '#BEBEBE',
+        borderColor: '#BEBEBE',
     },
     checkmark: {
         color: COLORS.white,
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     activityTextChecked: {
-        color: COLORS.sageGreen,
+        color: '#999999',
     },
     footer: {
         padding: 24,
