@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     activityTextChecked: {
-        color: '#999999',
+        // Keep text color unchanged when checked
     },
     footer: {
         padding: 24,
