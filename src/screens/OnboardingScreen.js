@@ -205,19 +205,12 @@ const styles = StyleSheet.create({
         borderTopColor: '#E0E0E0',
     },
     continueButton: {
-        backgroundColor: COLORS.sageGreen,
+        backgroundColor: '#000000',
         paddingVertical: 18,
-        borderRadius: 30,
-        elevation: 4,
-        shadowColor: COLORS.sageGreen,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
+        borderRadius: 12,
     },
     continueButtonDisabled: {
         backgroundColor: COLORS.lightGrey,
-        elevation: 0,
-        shadowOpacity: 0,
     },
     continueButtonText: {
         color: COLORS.white,

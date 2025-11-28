@@ -103,15 +103,12 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     button: {
-        backgroundColor: COLORS.sageGreen, // Sage Green
+        backgroundColor: '#000000', // Black button to match design
         paddingHorizontal: 40,
         paddingVertical: 18,
-        borderRadius: 30, // More rounded
-        elevation: 4,
-        shadowColor: COLORS.sageGreen,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
+        borderRadius: 12, // Subtle rounded corners
+        width: '100%',
+        alignItems: 'center',
     },
     buttonText: {
         color: COLORS.white,
