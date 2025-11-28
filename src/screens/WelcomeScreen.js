@@ -104,9 +104,9 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#333333', // Dark gray button
-        paddingHorizontal: 40,
-        paddingVertical: 18,
-        borderRadius: 12, // Subtle rounded corners
+        paddingHorizontal: 32,
+        paddingVertical: 16,
+        borderRadius: 12,
         width: '100%',
         alignItems: 'center',
     },

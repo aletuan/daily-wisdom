@@ -124,16 +124,24 @@ export default function WisdomScreen({ route, navigation }) {
                                 ))}
                             </View>
                         </View>
-
-                        <View style={styles.separator} />
-
-                        <Text style={[styles.closingText, TYPOGRAPHY.body, { fontStyle: 'italic' }]}>
-                            {t.closing} {new Date().getHours() >= 18 ? t.tomorrow : t.tonight}.
-                        </Text>
                     </Animated.View>
                 )}
             </ScrollView>
 
+            {wisdom && !loading && !error && (
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={styles.saveButton}
+                        onPress={() => {
+                            // TODO: Implement save to favorites functionality
+                            console.log('Save to favorites');
+                        }}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={styles.saveButtonText}>{t.saveToFavorites || 'Save to Favorites'}</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 }
@@ -262,20 +270,24 @@ const styles = StyleSheet.create({
     activityTextChecked: {
         color: COLORS.sageGreen,
     },
-    separator: {
-        height: 2,
-        backgroundColor: '#E0E0E0',
-        width: '40%',
-        alignSelf: 'center',
-        marginBottom: 32,
-        marginTop: 8,
+    footer: {
+        padding: 24,
+        paddingBottom: 40,
+        backgroundColor: COLORS.white,
+        borderTopWidth: 1,
+        borderTopColor: '#E0E0E0',
     },
-    closingText: {
+    saveButton: {
+        backgroundColor: '#333333',
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    saveButtonText: {
+        color: COLORS.white,
         fontSize: 16,
-        color: COLORS.textSecondary,
-        textAlign: 'center',
-        lineHeight: 24,
-        fontStyle: 'italic',
-        marginBottom: 40,
+        fontWeight: '600',
+        letterSpacing: 0.5,
     },
 });

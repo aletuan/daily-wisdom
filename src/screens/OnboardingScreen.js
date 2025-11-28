@@ -205,8 +205,9 @@ const styles = StyleSheet.create({
         borderTopColor: '#E0E0E0',
     },
     continueButton: {
-        backgroundColor: '#000000',
-        paddingVertical: 18,
+        backgroundColor: '#333333',
+        paddingVertical: 16,
+        paddingHorizontal: 32,
         borderRadius: 12,
     },
     continueButtonDisabled: {
