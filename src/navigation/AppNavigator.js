@@ -1,15 +1,14 @@
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View, Pressable } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
-import BackArrowIcon from '../components/icons/BackArrowIcon';
 import { COLORS } from '../styles/colors';
 import { FONTS } from '../styles/typography';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export default function AppNavigator() {
     return (
@@ -27,16 +26,28 @@ export default function AppNavigator() {
                     headerStyle: {
                         backgroundColor: COLORS.white,
                     },
+                    headerLeftContainerStyle: {
+                        paddingLeft: 16,
+                        paddingRight: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        marginLeft: 0,
+                        marginRight: 0,
+                        backgroundColor: 'transparent',
+                        borderWidth: 0,
+                    },
                     headerLeft: ({ canGoBack }) =>
                         canGoBack ? (
-                            <TouchableOpacity
-                                onPress={() => navigation.goBack()}
-                                style={styles.backButton}
-                                activeOpacity={0.6}
-                            >
-                                <BackArrowIcon color={COLORS.darkGreen} />
-                                <Text style={styles.backText}>Back</Text>
-                            </TouchableOpacity>
+                            <View style={styles.backButtonWrapper}>
+                                <Pressable
+                                    onPress={() => navigation.goBack()}
+                                    style={styles.backButton}
+                                    android_ripple={null}
+                                    hitSlop={0}
+                                >
+                                    <Text style={styles.backArrow}>←</Text>
+                                </Pressable>
+                            </View>
                         ) : null,
                 })}
             >
@@ -66,17 +77,23 @@ export default function AppNavigator() {
 }
 
 const styles = StyleSheet.create({
-    backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-        marginLeft: -8,
-        marginRight: 16,
+    backButtonWrapper: {
+        width: 40,
+        height: 40,
+        overflow: 'hidden',
+        borderRadius: 20,
     },
-    backText: {
-        fontFamily: FONTS.sans.regular,
-        fontSize: 16,
-        color: COLORS.darkGreen,
-        marginLeft: 4,
+    backButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: COLORS.lightGrey,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    backArrow: {
+        color: COLORS.textMain,
+        fontSize: 20,
+        fontWeight: 'bold',
     },
 });
