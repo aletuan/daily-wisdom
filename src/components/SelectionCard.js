@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardSelected: {
-        backgroundColor: COLORS.sageGreen,
-        borderColor: COLORS.sageGreen,
+        backgroundColor: '#333333',
+        borderColor: '#333333',
         elevation: 4,
         shadowOpacity: 0.15,
     },

@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     button: {
-        backgroundColor: '#000000', // Black button to match design
+        backgroundColor: '#333333', // Dark gray button
         paddingHorizontal: 40,
         paddingVertical: 18,
         borderRadius: 12, // Subtle rounded corners
