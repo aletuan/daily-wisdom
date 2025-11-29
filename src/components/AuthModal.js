@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Platform, Keyboard, Animated } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { AUTH_CONTENT } from '../data/authContent';
 import GoogleIcon from './icons/GoogleIcon';
 import FacebookIcon from './icons/FacebookIcon';
+import { signUp, signIn } from '../services/authService';
 
 export default function AuthModal({ visible, onClose, language = 'en' }) {
     const t = AUTH_CONTENT[language];
@@ -12,13 +13,104 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const translateY = useRef(new Animated.Value(0)).current;
 
     const isSignUp = mode === 'signup';
 
-    const handleSubmit = () => {
-        // TODO: Implement authentication logic
-        console.log('Auth submit:', { mode, nickname, email, password });
-        onClose();
+    useEffect(() => {
+        const keyboardWillShow = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            () => {
+                // Fixed shift - doesn't change between keyboard types
+                Animated.timing(translateY, {
+                    toValue: -180,
+                    duration: Platform.OS === 'ios' ? 250 : 200,
+                    useNativeDriver: true,
+                }).start();
+            }
+        );
+
+        const keyboardWillHide = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            () => {
+                Animated.timing(translateY, {
+                    toValue: 0,
+                    duration: Platform.OS === 'ios' ? 250 : 200,
+                    useNativeDriver: true,
+                }).start();
+            }
+        );
+
+        return () => {
+            keyboardWillShow.remove();
+            keyboardWillHide.remove();
+        };
+    }, [translateY]);
+
+    const handleSubmit = async () => {
+        // Validation
+        if (isSignUp && !nickname.trim()) {
+            setError(t.nicknameRequired);
+            return;
+        }
+        if (!email.trim()) {
+            setError(t.emailRequired);
+            return;
+        }
+        if (password.length < 6) {
+            setError(t.passwordTooShort);
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            if (isSignUp) {
+                // Sign up flow
+                const { user, session, error: signUpError } = await signUp(
+                    email.trim(),
+                    password,
+                    nickname.trim()
+                );
+
+                if (signUpError) {
+                    setError(signUpError.message);
+                    return;
+                }
+
+                // Success - auto signed in, close modal
+                console.log('Sign up successful:', user);
+                setNickname('');
+                setEmail('');
+                setPassword('');
+                onClose();
+            } else {
+                // Sign in flow
+                const { user, session, error: signInError } = await signIn(
+                    email.trim(),
+                    password
+                );
+
+                if (signInError) {
+                    setError(signInError.message);
+                    return;
+                }
+
+                // Success - close modal
+                console.log('Sign in successful:', user);
+                setEmail('');
+                setPassword('');
+                onClose();
+            }
+        } catch (err) {
+            console.error('Auth error:', err);
+            setError(t.genericError);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSocialLogin = (provider) => {
@@ -32,6 +124,7 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
         setNickname('');
         setEmail('');
         setPassword('');
+        setError(''); // Clear error on mode switch
     };
 
     return (
@@ -44,10 +137,21 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
             <TouchableWithoutFeedback onPress={onClose}>
                 <View style={styles.backdrop}>
                     <TouchableWithoutFeedback>
-                        <View style={styles.modalContainer}>
+                        <Animated.View
+                            style={[
+                                styles.modalContainer,
+                                { transform: [{ translateY }] }
+                            ]}
+                        >
                             <Text style={[styles.title, TYPOGRAPHY.h3]}>
                                 {isSignUp ? t.signUpTitle : t.signInTitle}
                             </Text>
+
+                            {error ? (
+                                <View style={styles.errorContainer}>
+                                    <Text style={styles.errorText}>{error}</Text>
+                                </View>
+                            ) : null}
 
                             {isSignUp && (
                                 <TextInput
@@ -81,13 +185,18 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                             />
 
                             <TouchableOpacity
-                                style={styles.submitButton}
+                                style={[styles.submitButton, loading && styles.submitButtonDisabled]}
                                 onPress={handleSubmit}
                                 activeOpacity={0.8}
+                                disabled={loading}
                             >
-                                <Text style={styles.submitButtonText}>
-                                    {isSignUp ? t.signUpButton : t.signInButton}
-                                </Text>
+                                {loading ? (
+                                    <ActivityIndicator color={COLORS.white} />
+                                ) : (
+                                    <Text style={styles.submitButtonText}>
+                                        {isSignUp ? t.signUpButton : t.signInButton}
+                                    </Text>
+                                )}
                             </TouchableOpacity>
 
                             <View style={styles.separatorContainer}>
@@ -124,7 +233,7 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                     </Text>
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                        </Animated.View>
                     </TouchableWithoutFeedback>
                 </View>
             </TouchableWithoutFeedback>
@@ -223,5 +332,21 @@ const styles = StyleSheet.create({
     switchModeLink: {
         color: COLORS.textMain,
         fontWeight: '600',
+    },
+    errorContainer: {
+        backgroundColor: '#FEE2E2',
+        padding: 12,
+        borderRadius: 8,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#FCA5A5',
+    },
+    errorText: {
+        color: '#DC2626',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    submitButtonDisabled: {
+        opacity: 0.6,
     },
 });
