@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { AUTH_CONTENT } from '../data/authContent';
@@ -103,10 +103,14 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
             animationType="fade"
             onRequestClose={onClose}
         >
-            <TouchableWithoutFeedback onPress={onClose}>
-                <View style={styles.backdrop}>
-                    <TouchableWithoutFeedback>
-                        <View style={styles.modalContainer}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}
+            >
+                <TouchableWithoutFeedback onPress={onClose}>
+                    <View style={styles.backdrop}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalContainer}>
                             <Text style={[styles.title, TYPOGRAPHY.h3]}>
                                 {isSignUp ? t.signUpTitle : t.signInTitle}
                             </Text>
@@ -197,10 +201,11 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                     </Text>
                                 </Text>
                             </TouchableOpacity>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </View>
-            </TouchableWithoutFeedback>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </Modal>
     );
 }
