@@ -11,14 +11,12 @@ export default function GoogleIcon({ size = 20 }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFFFFF',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
+        backgroundColor: '#000000',
         justifyContent: 'center',
         alignItems: 'center',
     },
     icon: {
         fontWeight: 'bold',
-        color: '#4285F4', // Google blue
+        color: '#FFFFFF',
     },
 });
