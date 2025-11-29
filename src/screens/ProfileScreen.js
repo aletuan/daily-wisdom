@@ -250,7 +250,7 @@ export default function ProfileScreen({ route, navigation }) {
                             getAvatarDisplay()
                         )}
                         <View style={styles.editIcon}>
-                            <Text style={styles.editIconText}>✏</Text>
+                            <Text style={styles.editIconText}>✎</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
