@@ -5,6 +5,7 @@ import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 import { WISDOM_CONTENT } from '../data/wisdomContent';
 import AuthorAvatar from '../components/AuthorAvatar';
+import AuthModal from '../components/AuthModal';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -31,6 +32,7 @@ export default function WisdomScreen({ route, navigation }) {
     const [wisdom, setWisdom] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showAuthModal, setShowAuthModal] = useState(false);
 
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -132,16 +134,19 @@ export default function WisdomScreen({ route, navigation }) {
                 <View style={styles.footer}>
                     <TouchableOpacity
                         style={styles.saveButton}
-                        onPress={() => {
-                            // TODO: Implement save to favorites functionality
-                            console.log('Save to favorites');
-                        }}
+                        onPress={() => setShowAuthModal(true)}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.saveButtonText}>{t.saveToFavorites || 'Save to Favorites'}</Text>
                     </TouchableOpacity>
                 </View>
             )}
+
+            <AuthModal
+                visible={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                language={language}
+            />
         </View>
     );
 }
