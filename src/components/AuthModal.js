@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Platform, Keyboard, Animated } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { AUTH_CONTENT } from '../data/authContent';
@@ -15,8 +15,39 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const translateY = useRef(new Animated.Value(0)).current;
 
     const isSignUp = mode === 'signup';
+
+    useEffect(() => {
+        const keyboardWillShow = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            () => {
+                // Fixed shift - doesn't change between keyboard types
+                Animated.timing(translateY, {
+                    toValue: -180,
+                    duration: Platform.OS === 'ios' ? 250 : 200,
+                    useNativeDriver: true,
+                }).start();
+            }
+        );
+
+        const keyboardWillHide = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            () => {
+                Animated.timing(translateY, {
+                    toValue: 0,
+                    duration: Platform.OS === 'ios' ? 250 : 200,
+                    useNativeDriver: true,
+                }).start();
+            }
+        );
+
+        return () => {
+            keyboardWillShow.remove();
+            keyboardWillHide.remove();
+        };
+    }, [translateY]);
 
     const handleSubmit = async () => {
         // Validation
@@ -103,14 +134,15 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
             animationType="fade"
             onRequestClose={onClose}
         >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
-            >
-                <TouchableWithoutFeedback onPress={onClose}>
-                    <View style={styles.backdrop}>
-                        <TouchableWithoutFeedback>
-                            <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback onPress={onClose}>
+                <View style={styles.backdrop}>
+                    <TouchableWithoutFeedback>
+                        <Animated.View
+                            style={[
+                                styles.modalContainer,
+                                { transform: [{ translateY }] }
+                            ]}
+                        >
                             <Text style={[styles.title, TYPOGRAPHY.h3]}>
                                 {isSignUp ? t.signUpTitle : t.signInTitle}
                             </Text>
@@ -201,11 +233,10 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                     </Text>
                                 </Text>
                             </TouchableOpacity>
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+                        </Animated.View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </TouchableWithoutFeedback>
         </Modal>
     );
 }
