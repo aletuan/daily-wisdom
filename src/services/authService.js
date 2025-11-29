@@ -113,7 +113,13 @@ export async function getUserProfile() {
       .eq('id', user.id)
       .single();
 
-    return { profile: data, error };
+    // Add email from auth user to profile data
+    const profileWithEmail = {
+      ...data,
+      email: user.email,
+    };
+
+    return { profile: profileWithEmail, error };
   } catch (error) {
     console.error('Get profile error:', error);
     return { profile: null, error };

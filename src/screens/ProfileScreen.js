@@ -250,7 +250,7 @@ export default function ProfileScreen({ route, navigation }) {
                             getAvatarDisplay()
                         )}
                         <View style={styles.editIcon}>
-                            <Text style={styles.editIconText}>✏️</Text>
+                            <Text style={styles.editIconText}>✏</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 18,
-        backgroundColor: COLORS.sageGreen,
+        backgroundColor: '#D3D3D3',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 3,
@@ -464,6 +464,7 @@ const styles = StyleSheet.create({
     },
     editIconText: {
         fontSize: 16,
+        color: '#000000',
     },
     errorContainer: {
         backgroundColor: '#FEE2E2',
