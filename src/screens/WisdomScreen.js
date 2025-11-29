@@ -68,8 +68,7 @@ export default function WisdomScreen({ route, navigation }) {
                         <ProfileIcon
                             nickname={userProfile.nickname}
                             onPress={() => {
-                                // TODO: Navigate to profile screen or show menu
-                                console.log('Profile icon pressed');
+                                navigation.navigate('Profile', { language });
                             }}
                         />
                     </View>

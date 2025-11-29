@@ -5,6 +5,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import { COLORS } from '../styles/colors';
 import { FONTS } from '../styles/typography';
 
@@ -70,6 +71,11 @@ export default function AppNavigator() {
                     name="Wisdom"
                     component={WisdomScreen}
                     options={{ title: 'Your Wisdom' }}
+                />
+                <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{ title: 'Profile' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>
