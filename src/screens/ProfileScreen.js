@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image,
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
@@ -250,7 +251,7 @@ export default function ProfileScreen({ route, navigation }) {
                             getAvatarDisplay()
                         )}
                         <View style={styles.editIcon}>
-                            <Text style={styles.editIconText}>✎</Text>
+                            <MaterialIcons name="edit" size={18} color="#000000" />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -262,16 +263,15 @@ export default function ProfileScreen({ route, navigation }) {
                     </View>
                 ) : null}
 
-                {/* Username Input */}
+                {/* Username Input (Read-only) */}
                 <View style={styles.fieldContainer}>
                     <Text style={styles.label}>{t.username}</Text>
                     <TextInput
-                        style={styles.input}
+                        style={[styles.input, styles.inputReadonly]}
                         placeholder={t.username}
                         placeholderTextColor={COLORS.lightGrey}
                         value={nickname}
-                        onChangeText={setNickname}
-                        autoCapitalize="none"
+                        editable={false}
                     />
                 </View>
 
@@ -461,10 +461,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 3,
         borderColor: COLORS.white,
-    },
-    editIconText: {
-        fontSize: 16,
-        color: '#000000',
     },
     errorContainer: {
         backgroundColor: '#FEE2E2',
