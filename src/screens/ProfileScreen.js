@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
@@ -368,20 +368,41 @@ export default function ProfileScreen({ route, navigation }) {
             </View>
 
             {/* Date Picker Modal */}
-            <DatePicker
-                modal
-                open={showDatePicker}
-                date={dateOfBirth || new Date()}
-                mode="date"
-                maximumDate={new Date()}
-                onConfirm={(date) => {
-                    setShowDatePicker(false);
-                    handleDateChange(date);
-                }}
-                onCancel={() => {
-                    setShowDatePicker(false);
-                }}
-            />
+            {showDatePicker && (
+                <Modal
+                    transparent={true}
+                    animationType="slide"
+                    visible={showDatePicker}
+                    onRequestClose={() => setShowDatePicker(false)}
+                >
+                    <View style={styles.datePickerModal}>
+                        <View style={styles.datePickerContainer}>
+                            <View style={styles.datePickerHeader}>
+                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                                    <Text style={styles.datePickerButton}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                                    <Text style={[styles.datePickerButton, styles.datePickerDone]}>Done</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <DateTimePicker
+                                value={dateOfBirth || new Date()}
+                                mode="date"
+                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                                maximumDate={new Date()}
+                                onChange={(event, selectedDate) => {
+                                    if (Platform.OS === 'android') {
+                                        setShowDatePicker(false);
+                                    }
+                                    if (selectedDate) {
+                                        handleDateChange(selectedDate);
+                                    }
+                                }}
+                            />
+                        </View>
+                    </View>
+                </Modal>
+            )}
         </View>
     );
 }
@@ -539,5 +560,32 @@ const styles = StyleSheet.create({
     },
     buttonDisabled: {
         opacity: 0.6,
+    },
+    datePickerModal: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    datePickerContainer: {
+        backgroundColor: COLORS.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingBottom: 40,
+    },
+    datePickerHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#E0E0E0',
+    },
+    datePickerButton: {
+        fontSize: 16,
+        color: COLORS.textMain,
+    },
+    datePickerDone: {
+        fontWeight: '600',
+        color: COLORS.sageGreen,
     },
 });
