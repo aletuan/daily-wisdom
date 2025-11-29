@@ -6,6 +6,8 @@ import { generatePersonalizedWisdom } from '../services/claudeService';
 import { WISDOM_CONTENT } from '../data/wisdomContent';
 import AuthorAvatar from '../components/AuthorAvatar';
 import AuthModal from '../components/AuthModal';
+import ProfileIcon from '../components/ProfileIcon';
+import { getUserProfile, onAuthStateChange } from '../services/authService';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -33,6 +35,7 @@ export default function WisdomScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [userProfile, setUserProfile] = useState(null);
 
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -40,7 +43,46 @@ export default function WisdomScreen({ route, navigation }) {
 
     useEffect(() => {
         loadWisdom();
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                loadUserProfile();
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
     }, []);
+
+    // Update navigation header when userProfile changes
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () =>
+                userProfile ? (
+                    <View style={{ marginRight: 16 }}>
+                        <ProfileIcon
+                            nickname={userProfile.nickname}
+                            onPress={() => {
+                                // TODO: Navigate to profile screen or show menu
+                                console.log('Profile icon pressed');
+                            }}
+                        />
+                    </View>
+                ) : null,
+        });
+    }, [userProfile, navigation]);
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
+        }
+    };
 
     const loadWisdom = async () => {
         setLoading(true);
