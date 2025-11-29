@@ -175,7 +175,16 @@ export default function WisdomScreen({ route, navigation }) {
                 <View style={styles.footer}>
                     <TouchableOpacity
                         style={styles.saveButton}
-                        onPress={() => setShowAuthModal(true)}
+                        onPress={() => {
+                            if (userProfile) {
+                                // User is logged in - implement save functionality
+                                // TODO: Implement actual save to favorites functionality
+                                console.log('Save to favorites:', wisdom);
+                            } else {
+                                // User not logged in - show auth modal
+                                setShowAuthModal(true);
+                            }
+                        }}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.saveButtonText}>{t.saveToFavorites || 'Save to Favorites'}</Text>
