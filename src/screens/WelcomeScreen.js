@@ -107,8 +107,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         paddingVertical: 16,
         borderRadius: 12,
-        width: '100%',
-        alignItems: 'center',
+        alignSelf: 'center',
     },
     buttonText: {
         color: COLORS.white,
