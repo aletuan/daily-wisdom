@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWi
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { AUTH_CONTENT } from '../data/authContent';
+import GoogleIcon from './icons/GoogleIcon';
+import FacebookIcon from './icons/FacebookIcon';
 
 export default function AuthModal({ visible, onClose, language = 'en' }) {
     const t = AUTH_CONTENT[language];
@@ -100,7 +102,8 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                     onPress={() => handleSocialLogin('google')}
                                     activeOpacity={0.7}
                                 >
-                                    <Text style={styles.socialButtonText}>G {t.google}</Text>
+                                    <GoogleIcon size={24} />
+                                    <Text style={styles.socialButtonText}>{t.google}</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
@@ -108,7 +111,8 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                     onPress={() => handleSocialLogin('facebook')}
                                     activeOpacity={0.7}
                                 >
-                                    <Text style={styles.socialButtonText}>f {t.facebook}</Text>
+                                    <FacebookIcon size={24} />
+                                    <Text style={styles.socialButtonText}>{t.facebook}</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -195,17 +199,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12,
+        paddingVertical: 14,
         paddingHorizontal: 16,
         borderRadius: 12,
         borderWidth: 1,
         borderColor: '#E0E0E0',
-        backgroundColor: COLORS.white,
+        backgroundColor: '#F8F8F8',
+        gap: 8,
     },
     socialButtonText: {
-        fontSize: 16,
+        fontSize: 15,
         color: COLORS.textMain,
-        fontWeight: '500',
+        fontWeight: '600',
     },
     switchModeContainer: {
         marginTop: 24,
