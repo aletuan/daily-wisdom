@@ -14,6 +14,11 @@ export const AUTH_CONTENT = {
         signInNow: "Sign in now",
         noAccount: "Don't have an account?",
         signUpNow: "Sign up now",
+        // Validation errors
+        nicknameRequired: "Nickname is required",
+        emailRequired: "Email is required",
+        passwordTooShort: "Password must be at least 6 characters",
+        genericError: "Something went wrong. Please try again.",
     },
     vi: {
         signUpTitle: "Đăng ký tài khoản",
@@ -30,5 +35,10 @@ export const AUTH_CONTENT = {
         signInNow: "Đăng nhập ngay",
         noAccount: "Chưa có tài khoản?",
         signUpNow: "Đăng ký ngay",
+        // Validation errors
+        nicknameRequired: "Vui lòng nhập nickname",
+        emailRequired: "Vui lòng nhập email",
+        passwordTooShort: "Mật khẩu phải có ít nhất 6 ký tự",
+        genericError: "Đã xảy ra lỗi. Vui lòng thử lại.",
     }
 };
