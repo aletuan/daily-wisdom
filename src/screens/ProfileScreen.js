@@ -297,7 +297,7 @@ export default function ProfileScreen({ route, navigation }) {
                         <Text style={[styles.pickerButtonText, !gender && styles.placeholderText]}>
                             {gender ? t[gender] : t.selectGender}
                         </Text>
-                        <Text style={styles.pickerArrow}>▼</Text>
+                        <MaterialIcons name="keyboard-arrow-down" size={24} color={COLORS.textSecondary} />
                     </TouchableOpacity>
                     {showGenderPicker && (
                         <Picker
@@ -511,10 +511,6 @@ const styles = StyleSheet.create({
     },
     placeholderText: {
         color: COLORS.lightGrey,
-    },
-    pickerArrow: {
-        fontSize: 12,
-        color: COLORS.textSecondary,
     },
     picker: {
         marginTop: 8,
