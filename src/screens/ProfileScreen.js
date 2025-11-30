@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
@@ -27,7 +26,6 @@ export default function ProfileScreen({ route, navigation }) {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
-    const [showGenderPicker, setShowGenderPicker] = useState(false);
 
     useEffect(() => {
         loadProfile();
@@ -315,33 +313,43 @@ export default function ProfileScreen({ route, navigation }) {
                     />
                 </View>
 
-                {/* Gender Picker */}
+                {/* Gender Selection */}
                 <View style={styles.fieldContainer}>
                     <Text style={styles.label}>{t.gender}</Text>
-                    <TouchableOpacity
-                        style={styles.pickerButton}
-                        onPress={() => setShowGenderPicker(!showGenderPicker)}
-                    >
-                        <Text style={[styles.pickerButtonText, !gender && styles.placeholderText]}>
-                            {gender ? t[gender] : t.selectGender}
-                        </Text>
-                        <MaterialIcons name="keyboard-arrow-down" size={24} color={COLORS.textSecondary} />
-                    </TouchableOpacity>
-                    {showGenderPicker && (
-                        <Picker
-                            selectedValue={gender}
-                            onValueChange={(value) => {
-                                setGender(value);
-                                setShowGenderPicker(false);
-                            }}
-                            style={styles.picker}
+                    <View style={styles.genderContainer}>
+                        <TouchableOpacity
+                            style={styles.genderOption}
+                            onPress={() => setGender('male')}
+                            activeOpacity={0.7}
                         >
-                            <Picker.Item label={t.selectGender} value="" />
-                            <Picker.Item label={t.male} value="male" />
-                            <Picker.Item label={t.female} value="female" />
-                            <Picker.Item label={t.other} value="other" />
-                        </Picker>
-                    )}
+                            <View style={styles.radioCircle}>
+                                {gender === 'male' && <View style={styles.radioDot} />}
+                            </View>
+                            <Text style={styles.genderLabel}>{t.male}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.genderOption}
+                            onPress={() => setGender('female')}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.radioCircle}>
+                                {gender === 'female' && <View style={styles.radioDot} />}
+                            </View>
+                            <Text style={styles.genderLabel}>{t.female}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.genderOption}
+                            onPress={() => setGender('other')}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.radioCircle}>
+                                {gender === 'other' && <View style={styles.radioDot} />}
+                            </View>
+                            <Text style={styles.genderLabel}>{t.other}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* Date of Birth Input */}
@@ -486,24 +494,34 @@ const styles = StyleSheet.create({
         color: COLORS.lightGrey,
         backgroundColor: '#F8F8F8',
     },
-    pickerButton: {
+    genderContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 4,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
+        gap: 24,
+        marginTop: 12,
     },
-    pickerButtonText: {
+    genderOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    radioCircle: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#E0E0E0',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    radioDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: COLORS.sageGreen,
+    },
+    genderLabel: {
         fontSize: 16,
         color: COLORS.textMain,
-    },
-    placeholderText: {
-        color: COLORS.lightGrey,
-    },
-    picker: {
-        marginTop: 8,
     },
     footer: {
         padding: 24,
