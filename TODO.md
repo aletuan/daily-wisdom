@@ -60,6 +60,8 @@ Users can save quotes to a personal "Wisdom Book" and access their curated colle
 - **Management**:
   - Swipe to unfavorite/delete from library
   - Optional: Sort by date saved or author
+- **Carousal Slide**
+  - Showing carousal slides in the Welcome Screen to introduce about app and features
 
 ### Technical Considerations
 - **Storage**: AsyncStorage for persisted favorites
