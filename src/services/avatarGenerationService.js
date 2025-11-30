@@ -143,7 +143,7 @@ export async function generateAuthorAvatar(authorName) {
         await ensureAvatarDirectory();
 
         // Create the prompt for pen-and-ink sketch style
-        const prompt = `Portrait of ${authorName}, detailed pen and ink sketch style, classical engraving technique, cross-hatching shading, pure white background, black and white only, historical figure portrait, Renaissance engraving style, highly detailed facial features, traditional illustration, etching art style, no color, monochrome, professional historical portrait, 1024x1024`;
+        const prompt = `Portrait of ${authorName}, detailed pen and ink sketch style, classical engraving technique, cross-hatching shading, pure white background, black and white only, historical figure portrait, Renaissance engraving style, highly detailed facial features, traditional illustration, etching art style, no color, monochrome, professional historical portrait, NO BORDERS, NO FRAMES, no decorative elements, seamless edge to edge, clean portrait only, full bleed to canvas edges, 1024x1024`;
 
         // Call Gemini Flash Image API
         const response = await fetch(IMAGEN_API_URL, {
