@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
         width: 10,
         height: 10,
         borderRadius: 5,
-        backgroundColor: COLORS.sageGreen,
+        backgroundColor: '#E0E0E0',
     },
     genderLabel: {
         fontSize: 16,
