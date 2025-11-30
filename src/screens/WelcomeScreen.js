@@ -86,6 +86,7 @@ export default function WelcomeScreen({ navigation }) {
                 visible={showAuthModal}
                 onClose={() => setShowAuthModal(false)}
                 language={language}
+                initialMode="signin"
             />
         </SafeAreaView>
     );

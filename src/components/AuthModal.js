@@ -7,9 +7,9 @@ import GoogleIcon from './icons/GoogleIcon';
 import FacebookIcon from './icons/FacebookIcon';
 import { signUp, signIn } from '../services/authService';
 
-export default function AuthModal({ visible, onClose, language = 'en' }) {
+export default function AuthModal({ visible, onClose, language = 'en', initialMode = 'signup' }) {
     const t = AUTH_CONTENT[language];
-    const [mode, setMode] = useState('signup'); // 'signup' or 'signin'
+    const [mode, setMode] = useState(initialMode); // 'signup' or 'signin'
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -48,6 +48,14 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
             keyboardWillHide.remove();
         };
     }, [translateY]);
+
+    // Reset mode to initialMode when modal becomes visible
+    useEffect(() => {
+        if (visible) {
+            setMode(initialMode);
+            setError('');
+        }
+    }, [visible, initialMode]);
 
     const handleSubmit = async () => {
         // Validation
