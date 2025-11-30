@@ -11,6 +11,8 @@ import DirectionIcon from '../components/icons/DirectionIcon';
 import HabitIcon from '../components/icons/HabitIcon';
 import StressIcon from '../components/icons/StressIcon';
 import GrowthIcon from '../components/icons/GrowthIcon';
+import ProfileIcon from '../components/ProfileIcon';
+import { getUserProfile, onAuthStateChange } from '../services/authService';
 
 const ICONS = {
     direction: DirectionIcon,
@@ -26,6 +28,7 @@ export default function OnboardingScreen({ navigation, route }) {
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
+    const [userProfile, setUserProfile] = useState(null);
     const scrollViewRef = useRef(null);
     const inputRef = useRef(null);
     const headerHeight = useHeaderHeight();
@@ -43,6 +46,46 @@ export default function OnboardingScreen({ navigation, route }) {
             }, 100);
         }
     }, [selectedOption]);
+
+    useEffect(() => {
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                loadUserProfile();
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () =>
+                userProfile ? (
+                    <View style={{ marginRight: 16 }}>
+                        <ProfileIcon
+                            nickname={userProfile.nickname}
+                            onPress={() => {
+                                navigation.navigate('Profile', { language });
+                            }}
+                        />
+                    </View>
+                ) : null,
+        });
+    }, [userProfile, navigation]);
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
+        }
+    };
 
     const handleOptionSelect = (id) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
