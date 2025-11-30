@@ -67,6 +67,7 @@ export default function WisdomScreen({ route, navigation }) {
                     <View style={{ marginRight: 16 }}>
                         <ProfileIcon
                             nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
                             onPress={() => {
                                 navigation.navigate('Profile', { language });
                             }}

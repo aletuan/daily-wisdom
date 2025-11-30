@@ -71,6 +71,7 @@ export default function OnboardingScreen({ navigation, route }) {
                     <View style={{ marginRight: 16 }}>
                         <ProfileIcon
                             nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
                             onPress={() => {
                                 navigation.navigate('Profile', { language });
                             }}

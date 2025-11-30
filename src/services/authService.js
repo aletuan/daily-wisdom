@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system/legacy';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@env';
 
 // Initialize Supabase client with AsyncStorage for session persistence
@@ -167,19 +168,20 @@ export async function uploadAvatar(imageUri) {
       return { avatarUrl: null, error: new Error('No user logged in') };
     }
 
-    // Convert image URI to blob
-    const response = await fetch(imageUri);
-    const blob = await response.blob();
+    // Read file as base64
+    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+      encoding: 'base64',
+    });
 
     // Create file path: avatars/{userId}/{timestamp}.jpg
     const fileExt = imageUri.split('.').pop() || 'jpg';
     const fileName = `${user.id}/${Date.now()}.${fileExt}`;
     const filePath = fileName;
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage with base64 decode option
     const { error } = await supabase.storage
       .from('avatars')
-      .upload(filePath, blob, {
+      .upload(filePath, decode(base64), {
         contentType: `image/${fileExt}`,
         upsert: true,
       });
@@ -199,6 +201,16 @@ export async function uploadAvatar(imageUri) {
     console.error('Avatar upload error:', error);
     return { avatarUrl: null, error };
   }
+}
+
+// Helper function to decode base64
+function decode(base64) {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
 }
 
 /**
