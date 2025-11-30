@@ -28,7 +28,7 @@ export default function AppNavigator() {
                         backgroundColor: COLORS.white,
                     },
                     headerLeftContainerStyle: {
-                        paddingLeft: 16,
+                        paddingLeft: 8,
                         paddingRight: 0,
                         paddingTop: 0,
                         paddingBottom: 0,
