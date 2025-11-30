@@ -277,7 +277,7 @@ export default function ProfileScreen({ route, navigation }) {
                             getAvatarDisplay()
                         )}
                         <View style={styles.editIcon}>
-                            <MaterialIcons name="edit" size={18} color="#000000" />
+                            <MaterialIcons name="edit" size={14} color="#000000" />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -426,38 +426,38 @@ const styles = StyleSheet.create({
     },
     avatarSection: {
         alignItems: 'center',
-        marginBottom: 32,
+        marginBottom: 24,
     },
     avatarContainer: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: 90,
+        height: 90,
+        borderRadius: 45,
         backgroundColor: '#000000',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
     },
     avatarImage: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: 90,
+        height: 90,
+        borderRadius: 45,
     },
     avatarLetter: {
         color: COLORS.white,
-        fontSize: 48,
+        fontSize: 36,
         fontWeight: '600',
     },
     editIcon: {
         position: 'absolute',
         bottom: 0,
         right: 0,
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 28,
+        height: 28,
+        borderRadius: 14,
         backgroundColor: '#D3D3D3',
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 3,
+        borderWidth: 2,
         borderColor: COLORS.white,
     },
     errorContainer: {
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     fieldContainer: {
-        marginBottom: 24,
+        marginBottom: 32,
     },
     label: {
         fontSize: 14,
