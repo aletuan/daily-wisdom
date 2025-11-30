@@ -200,10 +200,7 @@ export default function ProfileScreen({ route, navigation }) {
                 return;
             }
 
-            // Reload profile to get updated data
-            await loadProfile();
-
-            // Show success message
+            // Show success message without reloading screen
             Alert.alert('Success', t.saveSuccess);
         } catch (err) {
             console.error('Save profile error:', err);
