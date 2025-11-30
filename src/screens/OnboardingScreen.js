@@ -74,6 +74,7 @@ export default function OnboardingScreen({ navigation, route }) {
 
     useEffect(() => {
         navigation.setOptions({
+            headerLeft: userProfile ? () => null : undefined, // Hide back button if signed in
             headerRight: () =>
                 userProfile ? (
                     <View style={{ marginRight: 16 }}>
