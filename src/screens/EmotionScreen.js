@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { EMOTION_CONTENT } from '../data/emotionContent';
@@ -30,6 +31,13 @@ export default function EmotionScreen({ route, navigation }) {
             authListener?.subscription?.unsubscribe();
         };
     }, []);
+
+    // Reload profile when screen comes into focus (e.g., after uploading avatar)
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
 
     useEffect(() => {
         navigation.setOptions({

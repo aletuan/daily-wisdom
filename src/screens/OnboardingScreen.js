@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { FONTS, TYPOGRAPHY } from '../styles/typography';
 import { getOnboardingOptions } from '../data/onboardingOptions';
@@ -63,6 +64,13 @@ export default function OnboardingScreen({ navigation, route }) {
             authListener?.subscription?.unsubscribe();
         };
     }, []);
+
+    // Reload profile when screen comes into focus (e.g., after uploading avatar)
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
 
     useEffect(() => {
         navigation.setOptions({
