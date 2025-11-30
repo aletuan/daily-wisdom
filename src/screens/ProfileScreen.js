@@ -123,16 +123,24 @@ export default function ProfileScreen({ route, navigation }) {
     const handleDateChange = (text) => {
         setDateOfBirthText(text);
 
+        // Clear dateOfBirth if text is incomplete or invalid (but keep zodiac)
+        if (text.length < 10) {
+            setDateOfBirth(null);
+            return;
+        }
+
         // Validate format dd/mm/yyyy when complete (10 characters)
         if (text.length === 10 && text.includes('/')) {
             const parts = text.split('/');
-            if (parts.length === 3) {
+            if (parts.length === 3 && parts[0].length === 2 && parts[1].length === 2 && parts[2].length === 4) {
                 const day = parseInt(parts[0], 10);
                 const month = parseInt(parts[1], 10);
                 const year = parseInt(parts[2], 10);
 
-                // Validate date
-                if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900 && year <= new Date().getFullYear()) {
+                // Validate date ranges
+                if (!isNaN(day) && !isNaN(month) && !isNaN(year) &&
+                    day >= 1 && day <= 31 && month >= 1 && month <= 12 &&
+                    year >= 1900 && year <= new Date().getFullYear()) {
                     const date = new Date(year, month - 1, day);
                     // Check if date is valid (handles invalid dates like 31/02/2023)
                     if (date.getDate() === day && date.getMonth() === month - 1) {
@@ -140,10 +148,14 @@ export default function ProfileScreen({ route, navigation }) {
                         // Auto-calculate zodiac sign
                         const zodiac = calculateZodiacSign(date);
                         setZodiacSign(zodiac);
+                        return;
                     }
                 }
             }
         }
+
+        // If we reach here, date is invalid - clear dateOfBirth but keep zodiac
+        setDateOfBirth(null);
     };
 
     const validateForm = () => {
@@ -163,7 +175,11 @@ export default function ProfileScreen({ route, navigation }) {
         }
 
         if (!dateOfBirth) {
-            setError(t.dateRequired);
+            if (dateOfBirthText.trim() === '') {
+                setError(t.dateRequired);
+            } else {
+                setError(t.invalidDate || 'Invalid date format. Please use dd/mm/yyyy');
+            }
             return false;
         }
 
