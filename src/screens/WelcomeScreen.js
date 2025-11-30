@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
@@ -10,6 +10,7 @@ export default function WelcomeScreen({ navigation }) {
     const [language, setLanguage] = useState('en');
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
+    const authModalOpenedRef = useRef(false);
 
     useEffect(() => {
         loadUserProfile();
@@ -19,6 +20,12 @@ export default function WelcomeScreen({ navigation }) {
             if (event === 'SIGNED_IN') {
                 loadUserProfile();
                 setShowAuthModal(false);  // Close modal on successful sign in
+
+                // Navigate to onboarding if auth modal was opened from this screen
+                if (authModalOpenedRef.current) {
+                    authModalOpenedRef.current = false;
+                    navigation.navigate('Onboarding', { language });
+                }
             } else if (event === 'SIGNED_OUT') {
                 setUserProfile(null);
             }
@@ -27,7 +34,7 @@ export default function WelcomeScreen({ navigation }) {
         return () => {
             authListener?.subscription?.unsubscribe();
         };
-    }, []);
+    }, [language, navigation]);
 
     const loadUserProfile = async () => {
         const { profile, error } = await getUserProfile();
@@ -72,7 +79,10 @@ export default function WelcomeScreen({ navigation }) {
 
                 <TouchableOpacity
                     style={styles.signInContainer}
-                    onPress={() => setShowAuthModal(true)}
+                    onPress={() => {
+                        authModalOpenedRef.current = true;
+                        setShowAuthModal(true);
+                    }}
                     activeOpacity={0.7}
                 >
                     <Text style={styles.signInText}>

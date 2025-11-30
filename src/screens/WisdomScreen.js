@@ -41,6 +41,7 @@ export default function WisdomScreen({ route, navigation }) {
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(20)).current;
+    const authModalOpenedRef = useRef(false);
 
     useEffect(() => {
         loadWisdom();
@@ -50,6 +51,13 @@ export default function WisdomScreen({ route, navigation }) {
         const { data: authListener } = onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
                 loadUserProfile();
+
+                // Navigate to profile if auth modal was opened from this screen
+                if (event === 'SIGNED_IN' && authModalOpenedRef.current) {
+                    authModalOpenedRef.current = false;
+                    setShowAuthModal(false);
+                    navigation.navigate('Profile', { language });
+                }
             } else if (event === 'SIGNED_OUT') {
                 setUserProfile(null);
             }
@@ -58,7 +66,7 @@ export default function WisdomScreen({ route, navigation }) {
         return () => {
             authListener?.subscription?.unsubscribe();
         };
-    }, []);
+    }, [language, navigation]);
 
     // Reload profile when screen comes into focus (e.g., after uploading avatar)
     useFocusEffect(
@@ -191,6 +199,7 @@ export default function WisdomScreen({ route, navigation }) {
                                 console.log('Save to favorites:', wisdom);
                             } else {
                                 // User not logged in - show auth modal
+                                authModalOpenedRef.current = true;
                                 setShowAuthModal(true);
                             }
                         }}
