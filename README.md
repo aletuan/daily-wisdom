@@ -5,6 +5,8 @@
 ## Features
 
 - **Bilingual Support**: Full English and Vietnamese language support with a top-right toggle on the Welcome Screen. The selected language persists throughout the entire user journey.
+- **User Authentication**: Optional sign up/sign in with email and password powered by Supabase. Create an account to save favorites and manage your profile.
+- **User Profiles**: Personalized profiles with avatar upload, gender, date of birth, and auto-calculated zodiac sign. Access your profile from any screen via the profile icon in the header.
 - **AI Wisdom Coach**: A personalized onboarding flow with an intuitive grid-based selection interface for your current focus (Finding Direction, Building Habits, Dealing with Stress, Personal Growth).
 - **Zen Mode**: A distraction-free custom input experience with smooth animations and background dimming for journaling your thoughts.
 - **Emotion Tracking**: Share how you're feeling (Overwhelmed vs. Hopeful, Stuck vs. Making Progress) to get relevant advice.
