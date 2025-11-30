@@ -1,11 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { WELCOME_CONTENT } from '../data/welcomeContent';
+import AuthModal from '../components/AuthModal';
+import { onAuthStateChange, getUserProfile } from '../services/authService';
 
 export default function WelcomeScreen({ navigation }) {
     const [language, setLanguage] = useState('en');
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN') {
+                loadUserProfile();
+                setShowAuthModal(false);  // Close modal on successful sign in
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
+    }, []);
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
+        }
+    };
 
     const handlePress = () => {
         navigation.navigate('Onboarding', { language });
@@ -40,7 +69,24 @@ export default function WelcomeScreen({ navigation }) {
                 <TouchableOpacity style={styles.button} onPress={handlePress}>
                     <Text style={[styles.buttonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.start}</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.signInContainer}
+                    onPress={() => setShowAuthModal(true)}
+                    activeOpacity={0.7}
+                >
+                    <Text style={styles.signInText}>
+                        {t.hasAccount}{' '}
+                        <Text style={styles.signInLink}>{t.signIn}</Text>
+                    </Text>
+                </TouchableOpacity>
             </View>
+
+            <AuthModal
+                visible={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                language={language}
+            />
         </SafeAreaView>
     );
 }
@@ -114,5 +160,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
         letterSpacing: 0.5,
+    },
+    signInContainer: {
+        marginTop: 24,
+        alignItems: 'center',
+    },
+    signInText: {
+        fontSize: 14,
+        color: COLORS.textSecondary,
+    },
+    signInLink: {
+        color: COLORS.textMain,
+        fontWeight: '600',
     },
 });
