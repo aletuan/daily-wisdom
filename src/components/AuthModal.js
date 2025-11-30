@@ -147,6 +147,10 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                                 {isSignUp ? t.signUpTitle : t.signInTitle}
                             </Text>
 
+                            <Text style={styles.description}>
+                                {isSignUp ? t.signUpDescription : t.signInDescription}
+                            </Text>
+
                             {error ? (
                                 <View style={styles.errorContainer}>
                                     <Text style={styles.errorText}>{error}</Text>
@@ -258,8 +262,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
         color: COLORS.textMain,
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    description: {
+        fontSize: 14,
+        color: COLORS.textSecondary,
         marginBottom: 24,
         textAlign: 'center',
+        lineHeight: 20,
     },
     input: {
         fontSize: 16,

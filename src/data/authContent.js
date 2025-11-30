@@ -2,6 +2,8 @@ export const AUTH_CONTENT = {
     en: {
         signUpTitle: "Create Account",
         signInTitle: "Sign In",
+        signUpDescription: "Create an account to save your favorite wisdom quotes",
+        signInDescription: "Sign in to access your saved favorites",
         nickname: "Nickname",
         email: "Email",
         password: "Password",
@@ -23,6 +25,8 @@ export const AUTH_CONTENT = {
     vi: {
         signUpTitle: "Đăng ký tài khoản",
         signInTitle: "Đăng nhập",
+        signUpDescription: "Đăng ký tài khoản để lưu những trích dẫn yêu thích của bạn",
+        signInDescription: "Đăng nhập để truy cập những mục yêu thích đã lưu",
         nickname: "Nickname",
         email: "Email",
         password: "Mật khẩu",
