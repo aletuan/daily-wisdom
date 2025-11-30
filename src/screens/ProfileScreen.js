@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
@@ -19,6 +18,7 @@ export default function ProfileScreen({ route, navigation }) {
     const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState(null);
+    const [dateOfBirthText, setDateOfBirthText] = useState('');
     const [zodiacSign, setZodiacSign] = useState('');
     const [avatarUrl, setAvatarUrl] = useState('');
 
@@ -27,7 +27,6 @@ export default function ProfileScreen({ route, navigation }) {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
-    const [showDatePicker, setShowDatePicker] = useState(false);
     const [showGenderPicker, setShowGenderPicker] = useState(false);
 
     useEffect(() => {
@@ -51,7 +50,17 @@ export default function ProfileScreen({ route, navigation }) {
                 setNickname(profileData.nickname || '');
                 setEmail(profileData.email || '');
                 setGender(profileData.gender || '');
-                setDateOfBirth(profileData.date_of_birth ? new Date(profileData.date_of_birth) : null);
+
+                // Format date of birth for display
+                if (profileData.date_of_birth) {
+                    const date = new Date(profileData.date_of_birth);
+                    setDateOfBirth(date);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    setDateOfBirthText(`${day}/${month}/${year}`);
+                }
+
                 setZodiacSign(profileData.zodiac_sign || '');
                 setAvatarUrl(profileData.avatar_url || '');
             }
@@ -113,11 +122,30 @@ export default function ProfileScreen({ route, navigation }) {
         }
     };
 
-    const handleDateChange = (selectedDate) => {
-        setDateOfBirth(selectedDate);
-        // Auto-calculate zodiac sign
-        const zodiac = calculateZodiacSign(selectedDate);
-        setZodiacSign(zodiac);
+    const handleDateChange = (text) => {
+        setDateOfBirthText(text);
+
+        // Validate format dd/mm/yyyy when complete (10 characters)
+        if (text.length === 10 && text.includes('/')) {
+            const parts = text.split('/');
+            if (parts.length === 3) {
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10);
+                const year = parseInt(parts[2], 10);
+
+                // Validate date
+                if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900 && year <= new Date().getFullYear()) {
+                    const date = new Date(year, month - 1, day);
+                    // Check if date is valid (handles invalid dates like 31/02/2023)
+                    if (date.getDate() === day && date.getMonth() === month - 1) {
+                        setDateOfBirth(date);
+                        // Auto-calculate zodiac sign
+                        const zodiac = calculateZodiacSign(date);
+                        setZodiacSign(zodiac);
+                    }
+                }
+            }
+        }
     };
 
     const validateForm = () => {
@@ -316,18 +344,17 @@ export default function ProfileScreen({ route, navigation }) {
                     )}
                 </View>
 
-                {/* Date of Birth Picker */}
+                {/* Date of Birth Input */}
                 <View style={styles.fieldContainer}>
                     <Text style={styles.label}>{t.dateOfBirth}</Text>
-                    <TouchableOpacity
-                        style={styles.pickerButton}
-                        onPress={() => setShowDatePicker(true)}
-                    >
-                        <Text style={[styles.pickerButtonText, !dateOfBirth && styles.placeholderText]}>
-                            {dateOfBirth ? dateOfBirth.toLocaleDateString() : t.selectDate}
-                        </Text>
-                        <Text style={styles.pickerArrow}>📅</Text>
-                    </TouchableOpacity>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="dd/mm/yyyy"
+                        placeholderTextColor={COLORS.lightGrey}
+                        value={dateOfBirthText}
+                        onChangeText={handleDateChange}
+                        maxLength={10}
+                    />
                 </View>
 
                 {/* Zodiac Sign Display (Read-only) */}
@@ -366,43 +393,6 @@ export default function ProfileScreen({ route, navigation }) {
                     <Text style={styles.signOutButtonText}>{t.signOut}</Text>
                 </TouchableOpacity>
             </View>
-
-            {/* Date Picker Modal */}
-            {showDatePicker && (
-                <Modal
-                    transparent={true}
-                    animationType="slide"
-                    visible={showDatePicker}
-                    onRequestClose={() => setShowDatePicker(false)}
-                >
-                    <View style={styles.datePickerModal}>
-                        <View style={styles.datePickerContainer}>
-                            <View style={styles.datePickerHeader}>
-                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                                    <Text style={styles.datePickerButton}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                                    <Text style={[styles.datePickerButton, styles.datePickerDone]}>Done</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <DateTimePicker
-                                value={dateOfBirth || new Date()}
-                                mode="date"
-                                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                                maximumDate={new Date()}
-                                onChange={(event, selectedDate) => {
-                                    if (Platform.OS === 'android') {
-                                        setShowDatePicker(false);
-                                    }
-                                    if (selectedDate) {
-                                        handleDateChange(selectedDate);
-                                    }
-                                }}
-                            />
-                        </View>
-                    </View>
-                </Modal>
-            )}
         </View>
     );
 }
@@ -553,32 +543,5 @@ const styles = StyleSheet.create({
     },
     buttonDisabled: {
         opacity: 0.6,
-    },
-    datePickerModal: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    datePickerContainer: {
-        backgroundColor: COLORS.white,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        paddingBottom: 40,
-    },
-    datePickerHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
-    },
-    datePickerButton: {
-        fontSize: 16,
-        color: COLORS.textMain,
-    },
-    datePickerDone: {
-        fontWeight: '600',
-        color: COLORS.sageGreen,
     },
 });
