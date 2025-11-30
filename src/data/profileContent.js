@@ -1,0 +1,60 @@
+export const PROFILE_CONTENT = {
+    en: {
+        title: "Profile",
+        username: "Username",
+        email: "Email",
+        emailLabel: "Email Address",
+        gender: "Gender",
+        selectGender: "Select Gender",
+        male: "Male",
+        female: "Female",
+        other: "Other",
+        dateOfBirth: "Date of Birth",
+        selectDate: "Select Date",
+        zodiacSign: "Zodiac Sign",
+        save: "Save Changes",
+        signOut: "Sign Out",
+        // Validation errors
+        usernameRequired: "Username is required",
+        usernameTooShort: "Username must be at least 2 characters",
+        genderRequired: "Please select your gender",
+        dateRequired: "Please select your date of birth",
+        invalidDate: "Please select a valid date",
+        ageTooYoung: "You must be at least 13 years old",
+        // Success messages
+        saveSuccess: "Profile updated successfully",
+        // Error messages
+        uploadError: "Failed to upload image. Please try again.",
+        updateError: "Failed to update profile. Please try again.",
+        signOutError: "Failed to sign out. Please try again.",
+    },
+    vi: {
+        title: "Hồ sơ",
+        username: "Tên người dùng",
+        email: "Email",
+        emailLabel: "Địa chỉ Email",
+        gender: "Giới tính",
+        selectGender: "Chọn giới tính",
+        male: "Nam",
+        female: "Nữ",
+        other: "Khác",
+        dateOfBirth: "Ngày sinh",
+        selectDate: "Chọn ngày",
+        zodiacSign: "Cung hoàng đạo",
+        save: "Lưu thay đổi",
+        signOut: "Đăng xuất",
+        // Validation errors
+        usernameRequired: "Vui lòng nhập tên người dùng",
+        usernameTooShort: "Tên người dùng phải có ít nhất 2 ký tự",
+        genderRequired: "Vui lòng chọn giới tính",
+        dateRequired: "Vui lòng chọn ngày sinh",
+        invalidDate: "Vui lòng chọn ngày hợp lệ",
+        ageTooYoung: "Bạn phải đủ 13 tuổi trở lên",
+        // Success messages
+        saveSuccess: "Cập nhật hồ sơ thành công",
+        // Error messages
+        uploadError: "Tải ảnh lên thất bại. Vui lòng thử lại.",
+        updateError: "Cập nhật hồ sơ thất bại. Vui lòng thử lại.",
+        signOutError: "Đăng xuất thất bại. Vui lòng thử lại.",
+    }
+};

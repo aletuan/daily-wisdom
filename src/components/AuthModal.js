@@ -7,9 +7,9 @@ import GoogleIcon from './icons/GoogleIcon';
 import FacebookIcon from './icons/FacebookIcon';
 import { signUp, signIn } from '../services/authService';
 
-export default function AuthModal({ visible, onClose, language = 'en' }) {
+export default function AuthModal({ visible, onClose, language = 'en', initialMode = 'signup' }) {
     const t = AUTH_CONTENT[language];
-    const [mode, setMode] = useState('signup'); // 'signup' or 'signin'
+    const [mode, setMode] = useState(initialMode); // 'signup' or 'signin'
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -48,6 +48,14 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
             keyboardWillHide.remove();
         };
     }, [translateY]);
+
+    // Reset mode to initialMode when modal becomes visible
+    useEffect(() => {
+        if (visible) {
+            setMode(initialMode);
+            setError('');
+        }
+    }, [visible, initialMode]);
 
     const handleSubmit = async () => {
         // Validation
@@ -145,6 +153,10 @@ export default function AuthModal({ visible, onClose, language = 'en' }) {
                         >
                             <Text style={[styles.title, TYPOGRAPHY.h3]}>
                                 {isSignUp ? t.signUpTitle : t.signInTitle}
+                            </Text>
+
+                            <Text style={styles.description}>
+                                {isSignUp ? t.signUpDescription : t.signInDescription}
                             </Text>
 
                             {error ? (
@@ -258,8 +270,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
         color: COLORS.textMain,
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    description: {
+        fontSize: 14,
+        color: COLORS.textSecondary,
         marginBottom: 24,
         textAlign: 'center',
+        lineHeight: 20,
     },
     input: {
         fontSize: 16,

@@ -1,15 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { EMOTION_CONTENT } from '../data/emotionContent';
 import EmotionSlider from '../components/EmotionSlider';
+import ProfileIcon from '../components/ProfileIcon';
+import { getUserProfile, onAuthStateChange } from '../services/authService';
 
 export default function EmotionScreen({ route, navigation }) {
     const { context, language = 'en' } = route.params;
     const t = EMOTION_CONTENT[language];
     const [overwhelmedHopeful, setOverwhelmedHopeful] = useState(50);
     const [stuckProgress, setStuckProgress] = useState(50);
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                loadUserProfile();
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
+    }, []);
+
+    // Reload profile when screen comes into focus (e.g., after uploading avatar)
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () =>
+                userProfile ? (
+                    <View style={{ marginRight: 16 }}>
+                        <ProfileIcon
+                            nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
+                            onPress={() => {
+                                navigation.navigate('Profile', { language });
+                            }}
+                        />
+                    </View>
+                ) : null,
+        });
+    }, [userProfile, navigation]);
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
+        }
+    };
 
     const handleContinue = () => {
         navigation.navigate('Wisdom', {

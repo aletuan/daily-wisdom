@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
@@ -40,6 +41,7 @@ export default function WisdomScreen({ route, navigation }) {
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(20)).current;
+    const authModalOpenedRef = useRef(false);
 
     useEffect(() => {
         loadWisdom();
@@ -49,6 +51,13 @@ export default function WisdomScreen({ route, navigation }) {
         const { data: authListener } = onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
                 loadUserProfile();
+
+                // Navigate to profile if auth modal was opened from this screen
+                if (event === 'SIGNED_IN' && authModalOpenedRef.current) {
+                    authModalOpenedRef.current = false;
+                    setShowAuthModal(false);
+                    navigation.navigate('Profile', { language });
+                }
             } else if (event === 'SIGNED_OUT') {
                 setUserProfile(null);
             }
@@ -57,7 +66,14 @@ export default function WisdomScreen({ route, navigation }) {
         return () => {
             authListener?.subscription?.unsubscribe();
         };
-    }, []);
+    }, [language, navigation]);
+
+    // Reload profile when screen comes into focus (e.g., after uploading avatar)
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
 
     // Update navigation header when userProfile changes
     useEffect(() => {
@@ -67,9 +83,9 @@ export default function WisdomScreen({ route, navigation }) {
                     <View style={{ marginRight: 16 }}>
                         <ProfileIcon
                             nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
                             onPress={() => {
-                                // TODO: Navigate to profile screen or show menu
-                                console.log('Profile icon pressed');
+                                navigation.navigate('Profile', { language });
                             }}
                         />
                     </View>
@@ -176,7 +192,17 @@ export default function WisdomScreen({ route, navigation }) {
                 <View style={styles.footer}>
                     <TouchableOpacity
                         style={styles.saveButton}
-                        onPress={() => setShowAuthModal(true)}
+                        onPress={() => {
+                            if (userProfile) {
+                                // User is logged in - implement save functionality
+                                // TODO: Implement actual save to favorites functionality
+                                console.log('Save to favorites:', wisdom);
+                            } else {
+                                // User not logged in - show auth modal
+                                authModalOpenedRef.current = true;
+                                setShowAuthModal(true);
+                            }
+                        }}
                         activeOpacity={0.8}
                     >
                         <Text style={styles.saveButtonText}>{t.saveToFavorites || 'Save to Favorites'}</Text>

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { FONTS, TYPOGRAPHY } from '../styles/typography';
 import { getOnboardingOptions } from '../data/onboardingOptions';
@@ -11,6 +12,8 @@ import DirectionIcon from '../components/icons/DirectionIcon';
 import HabitIcon from '../components/icons/HabitIcon';
 import StressIcon from '../components/icons/StressIcon';
 import GrowthIcon from '../components/icons/GrowthIcon';
+import ProfileIcon from '../components/ProfileIcon';
+import { getUserProfile, onAuthStateChange } from '../services/authService';
 
 const ICONS = {
     direction: DirectionIcon,
@@ -26,6 +29,7 @@ export default function OnboardingScreen({ navigation, route }) {
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
+    const [userProfile, setUserProfile] = useState(null);
     const scrollViewRef = useRef(null);
     const inputRef = useRef(null);
     const headerHeight = useHeaderHeight();
@@ -43,6 +47,54 @@ export default function OnboardingScreen({ navigation, route }) {
             }, 100);
         }
     }, [selectedOption]);
+
+    useEffect(() => {
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                loadUserProfile();
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
+    }, []);
+
+    // Reload profile when screen comes into focus (e.g., after uploading avatar)
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () =>
+                userProfile ? (
+                    <View style={{ marginRight: 16 }}>
+                        <ProfileIcon
+                            nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
+                            onPress={() => {
+                                navigation.navigate('Profile', { language });
+                            }}
+                        />
+                    </View>
+                ) : null,
+        });
+    }, [userProfile, navigation]);
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
+        }
+    };
 
     const handleOptionSelect = (id) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

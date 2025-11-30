@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system/legacy';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@env';
 
 // Initialize Supabase client with AsyncStorage for session persistence
@@ -113,7 +114,13 @@ export async function getUserProfile() {
       .eq('id', user.id)
       .single();
 
-    return { profile: data, error };
+    // Add email from auth user to profile data
+    const profileWithEmail = {
+      ...data,
+      email: user.email,
+    };
+
+    return { profile: profileWithEmail, error };
   } catch (error) {
     console.error('Get profile error:', error);
     return { profile: null, error };
@@ -121,11 +128,101 @@ export async function getUserProfile() {
 }
 
 /**
- * Update user profile
- * @param {string} nickname - New nickname
+ * Calculate zodiac sign from date of birth
+ * @param {Date} dateOfBirth - User's date of birth
+ * @returns {string} Zodiac sign name
+ */
+export function calculateZodiacSign(dateOfBirth) {
+  if (!dateOfBirth) return null;
+
+  const date = new Date(dateOfBirth);
+  const month = date.getMonth() + 1; // 1-12
+  const day = date.getDate();
+
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'Aries';
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'Taurus';
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'Gemini';
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'Cancer';
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'Leo';
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'Virgo';
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'Libra';
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'Scorpio';
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'Sagittarius';
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'Capricorn';
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'Aquarius';
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces';
+
+  return null;
+}
+
+/**
+ * Upload avatar image to Supabase Storage
+ * @param {string} imageUri - Local URI of the image to upload
+ * @returns {Promise<{avatarUrl, error}>}
+ */
+export async function uploadAvatar(imageUri) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { avatarUrl: null, error: new Error('No user logged in') };
+    }
+
+    // Read file as base64
+    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+      encoding: 'base64',
+    });
+
+    // Create file path: avatars/{userId}/{timestamp}.jpg
+    const fileExt = imageUri.split('.').pop() || 'jpg';
+    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+    const filePath = fileName;
+
+    // Upload to Supabase Storage with base64 decode option
+    const { error } = await supabase.storage
+      .from('avatars')
+      .upload(filePath, decode(base64), {
+        contentType: `image/${fileExt}`,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error('Avatar upload error:', error);
+      return { avatarUrl: null, error };
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(filePath);
+
+    return { avatarUrl: publicUrl, error: null };
+  } catch (error) {
+    console.error('Avatar upload error:', error);
+    return { avatarUrl: null, error };
+  }
+}
+
+// Helper function to decode base64
+function decode(base64) {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+/**
+ * Update user profile with multiple fields
+ * @param {Object} profileData - Profile fields to update
+ * @param {string} profileData.nickname - User nickname
+ * @param {string} profileData.gender - User gender (male/female/other)
+ * @param {string} profileData.date_of_birth - Date of birth (YYYY-MM-DD)
+ * @param {string} profileData.avatar_url - Avatar image URL
  * @returns {Promise<{profile, error}>}
  */
-export async function updateProfile(nickname) {
+export async function updateProfile(profileData) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -133,9 +230,15 @@ export async function updateProfile(nickname) {
       return { profile: null, error: new Error('No user logged in') };
     }
 
+    // Auto-calculate zodiac sign if date of birth is provided
+    const updateData = { ...profileData };
+    if (profileData.date_of_birth) {
+      updateData.zodiac_sign = calculateZodiacSign(profileData.date_of_birth);
+    }
+
     const { data, error } = await supabase
       .from('profiles')
-      .update({ nickname })
+      .update(updateData)
       .eq('id', user.id)
       .select()
       .single();
