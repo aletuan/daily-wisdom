@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, SafeAreaView, FlatList, Dimensions } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { WELCOME_CONTENT } from '../data/welcomeContent';
 import AuthModal from '../components/AuthModal';
 import { onAuthStateChange, getUserProfile } from '../services/authService';
 
+const { width } = Dimensions.get('window');
+
 export default function WelcomeScreen({ navigation }) {
     const [language, setLanguage] = useState('en');
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
+    const [currentSlide, setCurrentSlide] = useState(0);
     const authModalOpenedRef = useRef(false);
+    const flatListRef = useRef(null);
 
     useEffect(() => {
         loadUserProfile();
@@ -47,7 +51,37 @@ export default function WelcomeScreen({ navigation }) {
         navigation.navigate('Onboarding', { language });
     };
 
+    const onViewableItemsChanged = useRef(({ viewableItems }) => {
+        if (viewableItems.length > 0) {
+            setCurrentSlide(viewableItems[0].index || 0);
+        }
+    }).current;
+
+    const viewabilityConfig = useRef({
+        itemVisiblePercentThreshold: 50,
+    }).current;
+
     const t = WELCOME_CONTENT[language];
+
+    const renderCarouselItem = ({ item }) => (
+        <View style={styles.carouselSlide}>
+            <Text style={styles.carouselText}>{item.text}</Text>
+        </View>
+    );
+
+    const renderPaginationDots = () => (
+        <View style={styles.paginationContainer}>
+            {t.carouselSlides.map((_, index) => (
+                <View
+                    key={index}
+                    style={[
+                        styles.paginationDot,
+                        index === currentSlide && styles.paginationDotActive,
+                    ]}
+                />
+            ))}
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -65,7 +99,21 @@ export default function WelcomeScreen({ navigation }) {
 
             <View style={styles.content}>
                 <Text style={[styles.title, TYPOGRAPHY.h1]}>{t.title}</Text>
-                <Text style={[styles.subtitle, TYPOGRAPHY.body]}>{t.subtitle}</Text>
+
+                <FlatList
+                    ref={flatListRef}
+                    data={t.carouselSlides}
+                    renderItem={renderCarouselItem}
+                    keyExtractor={(item) => item.id}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    onViewableItemsChanged={onViewableItemsChanged}
+                    viewabilityConfig={viewabilityConfig}
+                    style={styles.carousel}
+                    contentContainerStyle={styles.carouselContent}
+                />
+                {renderPaginationDots()}
 
                 <Image
                     source={require('../../assets/welcome-image.png')}
@@ -183,5 +231,44 @@ const styles = StyleSheet.create({
     signInLink: {
         color: COLORS.textMain,
         fontWeight: '600',
+    },
+    carousel: {
+        flexGrow: 0,
+        marginVertical: 20,
+    },
+    carouselContent: {
+        alignItems: 'center',
+    },
+    carouselSlide: {
+        width: width - 60,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 80,
+    },
+    carouselText: {
+        fontSize: 16,
+        color: COLORS.textSecondary,
+        textAlign: 'center',
+        lineHeight: 24,
+        fontStyle: 'italic',
+    },
+    paginationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 20,
+    },
+    paginationDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: COLORS.lightGrey,
+        marginHorizontal: 4,
+    },
+    paginationDotActive: {
+        backgroundColor: COLORS.darkGreen,
+        width: 24,
     },
 });
