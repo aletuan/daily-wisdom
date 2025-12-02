@@ -198,75 +198,74 @@ export default function FavoritesScreen({ route, navigation }) {
 
     return (
         <View style={styles.container}>
+            {/* Fixed Calendar */}
+            <Calendar
+                current={new Date().toISOString().split('T')[0]}
+                markedDates={markedDates}
+                onDayPress={handleDatePress}
+                theme={{
+                    calendarBackground: COLORS.white,
+                    textSectionTitleColor: COLORS.textSecondary,
+                    selectedDayBackgroundColor: COLORS.sageGreen,
+                    selectedDayTextColor: COLORS.white,
+                    todayTextColor: COLORS.sageGreen,
+                    dayTextColor: COLORS.textMain,
+                    textDisabledColor: '#BEBEBE',
+                    dotColor: COLORS.darkGreen,
+                    selectedDotColor: COLORS.white,
+                    arrowColor: COLORS.textMain,
+                    monthTextColor: COLORS.textMain,
+                    textDayFontFamily: FONTS.sans.regular,
+                    textMonthFontFamily: FONTS.serif.semiBold,
+                    textDayHeaderFontFamily: FONTS.sans.semiBold,
+                    textDayFontSize: 16,
+                    textMonthFontSize: 18,
+                    textDayHeaderFontSize: 14,
+                }}
+                style={styles.calendar}
+            />
+
+            {/* Hint Text */}
+            <Text style={[styles.hintText, TYPOGRAPHY.caption]}>
+                {t.tapDateToView}
+            </Text>
+
+            {/* Recent Favorites Header */}
+            <Text style={[styles.recentHeader, TYPOGRAPHY.h3]}>
+                {t.recentFavorites}
+            </Text>
+
+            {/* Scrollable Recent Favorites List */}
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.content}
+                style={styles.recentScrollView}
+                contentContainerStyle={styles.recentList}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Calendar */}
-                <Calendar
-                    current={new Date().toISOString().split('T')[0]}
-                    markedDates={markedDates}
-                    onDayPress={handleDatePress}
-                    theme={{
-                        calendarBackground: COLORS.white,
-                        textSectionTitleColor: COLORS.textSecondary,
-                        selectedDayBackgroundColor: COLORS.sageGreen,
-                        selectedDayTextColor: COLORS.white,
-                        todayTextColor: COLORS.sageGreen,
-                        dayTextColor: COLORS.textMain,
-                        textDisabledColor: '#BEBEBE',
-                        dotColor: COLORS.darkGreen,
-                        selectedDotColor: COLORS.white,
-                        arrowColor: COLORS.textMain,
-                        monthTextColor: COLORS.textMain,
-                        textDayFontFamily: FONTS.sans.regular,
-                        textMonthFontFamily: FONTS.serif.semiBold,
-                        textDayHeaderFontFamily: FONTS.sans.semiBold,
-                        textDayFontSize: 16,
-                        textMonthFontSize: 18,
-                        textDayHeaderFontSize: 14,
-                    }}
-                    style={styles.calendar}
-                />
-
-                {/* Hint Text */}
-                <Text style={[styles.hintText, TYPOGRAPHY.caption]}>
-                    {t.tapDateToView}
-                </Text>
-
-                {/* Recent Favorites */}
-                <Text style={[styles.recentHeader, TYPOGRAPHY.h3]}>
-                    {t.recentFavorites}
-                </Text>
-
-                <View style={styles.recentList}>
-                    {recentFavorites.map((favorite) => (
-                        <TouchableOpacity
-                            key={favorite.id}
-                            style={styles.favoriteCard}
-                            onPress={() => handleFavoritePress(favorite)}
-                            activeOpacity={0.7}
-                        >
-                            <View style={styles.cardRow}>
-                                <AuthorAvatar authorName={favorite.author} />
-                                <View style={styles.cardContent}>
-                                    <Text style={styles.quotePreview} numberOfLines={2}>
-                                        "{favorite.text}"
+                {recentFavorites.map((favorite) => (
+                    <TouchableOpacity
+                        key={favorite.id}
+                        style={styles.favoriteCard}
+                        onPress={() => handleFavoritePress(favorite)}
+                        activeOpacity={0.7}
+                    >
+                        <View style={styles.cardRow}>
+                            <AuthorAvatar authorName={favorite.author} />
+                            <View style={styles.cardContent}>
+                                <Text style={styles.quotePreview} numberOfLines={2}>
+                                    "{favorite.text}"
+                                </Text>
+                                <View style={styles.cardFooter}>
+                                    <Text style={styles.cardAuthor}>
+                                        - {favorite.author}
                                     </Text>
-                                    <View style={styles.cardFooter}>
-                                        <Text style={styles.cardAuthor}>
-                                            - {favorite.author}
-                                        </Text>
-                                        <Text style={styles.cardDate}>
-                                            {formatDate(favorite.saved_at)}
-                                        </Text>
-                                    </View>
+                                    <Text style={styles.cardDate}>
+                                        {formatDate(favorite.saved_at)}
+                                    </Text>
                                 </View>
                             </View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                        </View>
+                    </TouchableOpacity>
+                ))}
             </ScrollView>
 
             {/* Wisdom Detail Modal */}
@@ -285,12 +284,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.white,
-    },
-    scrollView: {
-        flex: 1,
-    },
-    content: {
-        paddingBottom: 24,
     },
     loadingContainer: {
         flex: 1,
@@ -340,8 +333,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingHorizontal: 24,
     },
+    recentScrollView: {
+        flex: 1,
+    },
     recentList: {
         paddingHorizontal: 24,
+        paddingBottom: 24,
         gap: 12,
     },
     favoriteCard: {
