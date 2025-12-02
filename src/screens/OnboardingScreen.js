@@ -73,7 +73,7 @@ export default function OnboardingScreen({ navigation, route }) {
     );
 
     useEffect(() => {
-        navigation.setOptions({
+        const options = {
             headerRight: () =>
                 userProfile ? (
                     <View style={{ marginRight: 16 }}>
@@ -86,7 +86,14 @@ export default function OnboardingScreen({ navigation, route }) {
                         />
                     </View>
                 ) : null,
-        });
+        };
+
+        // Only override headerLeft when user is logged in
+        if (userProfile) {
+            options.headerLeft = () => null;
+        }
+
+        navigation.setOptions(options);
     }, [userProfile, navigation]);
 
     const loadUserProfile = async () => {
