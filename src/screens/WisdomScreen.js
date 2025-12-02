@@ -10,6 +10,7 @@ import AuthorAvatar from '../components/AuthorAvatar';
 import AuthModal from '../components/AuthModal';
 import ProfileIcon from '../components/ProfileIcon';
 import { getUserProfile, onAuthStateChange, saveFavorite } from '../services/authService';
+import { useUser } from '../contexts/UserContext';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -37,8 +38,6 @@ export default function WisdomScreen({ route, navigation }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showAuthModal, setShowAuthModal] = useState(false);
-    const [userProfile, setUserProfile] = useState(null);
-
     // Animation values
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const slideAnim = useRef(new Animated.Value(20)).current;
@@ -46,21 +45,16 @@ export default function WisdomScreen({ route, navigation }) {
 
     useEffect(() => {
         loadWisdom();
-        loadUserProfile();
 
         // Listen for auth state changes
         const { data: authListener } = onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-                loadUserProfile();
-
                 // Navigate to profile if auth modal was opened from this screen
                 if (event === 'SIGNED_IN' && authModalOpenedRef.current) {
                     authModalOpenedRef.current = false;
                     setShowAuthModal(false);
                     navigation.navigate('Profile', { language });
                 }
-            } else if (event === 'SIGNED_OUT') {
-                setUserProfile(null);
             }
         });
 
@@ -68,38 +62,6 @@ export default function WisdomScreen({ route, navigation }) {
             authListener?.subscription?.unsubscribe();
         };
     }, [language, navigation]);
-
-    // Reload profile when screen comes into focus (e.g., after uploading avatar)
-    useFocusEffect(
-        React.useCallback(() => {
-            loadUserProfile();
-        }, [])
-    );
-
-    // Update navigation header when userProfile changes
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () =>
-                userProfile ? (
-                    <View style={{ marginRight: 16 }}>
-                        <ProfileIcon
-                            nickname={userProfile.nickname}
-                            avatarUrl={userProfile.avatar_url}
-                            onPress={() => {
-                                navigation.navigate('Profile', { language });
-                            }}
-                        />
-                    </View>
-                ) : null,
-        });
-    }, [userProfile, navigation]);
-
-    const loadUserProfile = async () => {
-        const { profile, error } = await getUserProfile();
-        if (profile && !error) {
-            setUserProfile(profile);
-        }
-    };
 
     const loadWisdom = async () => {
         setLoading(true);
@@ -135,6 +97,8 @@ export default function WisdomScreen({ route, navigation }) {
             setLoading(false);
         }
     };
+
+    const { userProfile } = useUser(); // Get userProfile from context
 
     return (
         <View style={styles.container}>

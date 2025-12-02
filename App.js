@@ -13,6 +13,7 @@ import {
 } from '@expo-google-fonts/inter';
 import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/ErrorBoundary';
+import { UserProvider } from './src/contexts/UserContext';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -50,7 +51,9 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <AppNavigator />
+      <UserProvider>
+        <AppNavigator />
+      </UserProvider>
     </ErrorBoundary>
   );
 }

@@ -6,10 +6,12 @@ import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
 import { getUserProfile, updateProfile, uploadAvatar, signOut, calculateZodiacSign } from '../services/authService';
+import { useUser } from '../contexts/UserContext';
 
 export default function ProfileScreen({ route, navigation }) {
     const { language = 'en' } = route.params || {};
     const t = PROFILE_CONTENT[language];
+    const { refreshProfile } = useUser();
 
     // Profile data state
     const [profile, setProfile] = useState(null);
@@ -111,6 +113,8 @@ export default function ProfileScreen({ route, navigation }) {
 
             if (updateError) {
                 setError(t.updateError);
+            } else {
+                refreshProfile(); // Update global context
             }
         } catch (err) {
             console.error('Avatar upload error:', err);
@@ -216,6 +220,8 @@ export default function ProfileScreen({ route, navigation }) {
                 return;
             }
 
+            refreshProfile(); // Update global context
+
             // Show success message without reloading screen
             Alert.alert('Success', t.saveSuccess);
         } catch (err) {
@@ -240,6 +246,7 @@ export default function ProfileScreen({ route, navigation }) {
                         if (error) {
                             setError(t.signOutError);
                         } else {
+                            refreshProfile(); // Clear global context
                             // Navigate to Welcome screen
                             navigation.reset({
                                 index: 0,

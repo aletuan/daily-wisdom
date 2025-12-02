@@ -7,6 +7,8 @@ import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import HeaderProfileIcon from '../components/HeaderProfileIcon';
+import BackArrowIcon from '../components/icons/BackArrowIcon';
 import { COLORS } from '../styles/colors';
 import { FONTS } from '../styles/typography';
 
@@ -66,12 +68,18 @@ export default function AppNavigator() {
                 <Stack.Screen
                     name="Emotion"
                     component={EmotionScreen}
-                    options={{ title: 'How You Feel' }}
+                    options={({ route }) => ({
+                        title: route.params?.language === 'vi' ? 'Cảm xúc của bạn' : 'Your Feelings',
+                        headerRight: () => <HeaderProfileIcon language={route.params?.language} />
+                    })}
                 />
                 <Stack.Screen
                     name="Wisdom"
                     component={WisdomScreen}
-                    options={{ title: 'Your Wisdom' }}
+                    options={({ route }) => ({
+                        title: route.params?.language === 'vi' ? 'Lời khuyên cho bạn' : 'Your Wisdom',
+                        headerRight: () => <HeaderProfileIcon language={route.params?.language} />
+                    })}
                 />
                 <Stack.Screen
                     name="Profile"
