@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { FONTS } from '../styles/typography';
 import { FAVORITES_CONTENT } from '../data/favoritesContent';
-import { getFavorites, getFavoritesByDate, deleteFavorite } from '../services/authService';
+import { getFavorites, getFavoritesByDate, deleteFavorite, getUserProfile, onAuthStateChange } from '../services/authService';
 import AuthorAvatar from '../components/AuthorAvatar';
+import ProfileIcon from '../components/ProfileIcon';
 import WisdomDetailModal from '../components/WisdomDetailModal';
 
 export default function FavoritesScreen({ route, navigation }) {
@@ -18,10 +20,49 @@ export default function FavoritesScreen({ route, navigation }) {
     const [error, setError] = useState(null);
     const [selectedFavorite, setSelectedFavorite] = useState(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [userProfile, setUserProfile] = useState(null);
 
     useEffect(() => {
         loadFavorites();
+        loadUserProfile();
+
+        // Listen for auth state changes
+        const { data: authListener } = onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+                loadUserProfile();
+            } else if (event === 'SIGNED_OUT') {
+                setUserProfile(null);
+            }
+        });
+
+        return () => {
+            authListener?.subscription?.unsubscribe();
+        };
     }, []);
+
+    // Reload profile when screen comes into focus
+    useFocusEffect(
+        React.useCallback(() => {
+            loadUserProfile();
+        }, [])
+    );
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () =>
+                userProfile ? (
+                    <View style={{ marginRight: 16 }}>
+                        <ProfileIcon
+                            nickname={userProfile.nickname}
+                            avatarUrl={userProfile.avatar_url}
+                            onPress={() => {
+                                navigation.navigate('Profile', { language });
+                            }}
+                        />
+                    </View>
+                ) : null,
+        });
+    }, [userProfile, navigation]);
 
     const loadFavorites = async () => {
         setLoading(true);
@@ -42,6 +83,13 @@ export default function FavoritesScreen({ route, navigation }) {
             setError(t.loadError);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const loadUserProfile = async () => {
+        const { profile, error } = await getUserProfile();
+        if (profile && !error) {
+            setUserProfile(profile);
         }
     };
 
