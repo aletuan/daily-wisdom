@@ -259,5 +259,116 @@ export function onAuthStateChange(callback) {
   return supabase.auth.onAuthStateChange(callback);
 }
 
+/**
+ * Save wisdom to favorites
+ * @param {Object} wisdom - Wisdom object { text, author, why_this, activities }
+ * @param {string} context - User's original context
+ * @param {Object} emotions - Emotional state { overwhelmedHopeful, stuckProgress }
+ * @param {string} language - Language code ('en' | 'vi')
+ * @returns {Promise<{favorite, error}>}
+ */
+export async function saveFavorite(wisdom, context, emotions, language) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { favorite: null, error: new Error('No user logged in') };
+    }
+
+    const { data, error } = await supabase
+      .from('favorites')
+      .insert({
+        user_id: user.id,
+        text: wisdom.text,
+        author: wisdom.author,
+        why_this: wisdom.why_this,
+        activities: wisdom.activities,
+        context,
+        emotions,
+        language,
+      })
+      .select()
+      .single();
+
+    return { favorite: data, error };
+  } catch (error) {
+    console.error('Save favorite error:', error);
+    return { favorite: null, error };
+  }
+}
+
+/**
+ * Get all favorites for current user
+ * @returns {Promise<{favorites, error}>}
+ */
+export async function getFavorites() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { favorites: [], error: new Error('No user logged in') };
+    }
+
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('saved_at', { ascending: false });
+
+    return { favorites: data || [], error };
+  } catch (error) {
+    console.error('Get favorites error:', error);
+    return { favorites: [], error };
+  }
+}
+
+/**
+ * Get favorites for a specific date
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @returns {Promise<{favorites, error}>}
+ */
+export async function getFavoritesByDate(date) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { favorites: [], error: new Error('No user logged in') };
+    }
+
+    // Query for favorites on the specified date (timezone-aware)
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('saved_at', `${date}T00:00:00`)
+      .lt('saved_at', `${date}T23:59:59`)
+      .order('saved_at', { ascending: false });
+
+    return { favorites: data || [], error };
+  } catch (error) {
+    console.error('Get favorites by date error:', error);
+    return { favorites: [], error };
+  }
+}
+
+/**
+ * Delete a favorite by ID
+ * @param {string} favoriteId - UUID of favorite to delete
+ * @returns {Promise<{error}>}
+ */
+export async function deleteFavorite(favoriteId) {
+  try {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('id', favoriteId);
+
+    return { error };
+  } catch (error) {
+    console.error('Delete favorite error:', error);
+    return { error };
+  }
+}
+
 // Export supabase client for advanced usage
 export { supabase };

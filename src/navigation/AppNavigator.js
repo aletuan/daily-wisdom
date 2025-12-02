@@ -6,6 +6,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 import { COLORS } from '../styles/colors';
 import { FONTS } from '../styles/typography';
 
@@ -76,6 +77,11 @@ export default function AppNavigator() {
                     name="Profile"
                     component={ProfileScreen}
                     options={{ title: 'Profile' }}
+                />
+                <Stack.Screen
+                    name="Favorites"
+                    component={FavoritesScreen}
+                    options={{ title: 'My Favorites' }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

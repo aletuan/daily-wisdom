@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView, Animated, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { generatePersonalizedWisdom } from '../services/claudeService';
 import { WISDOM_CONTENT } from '../data/wisdomContent';
+import { FAVORITES_CONTENT } from '../data/favoritesContent';
 import AuthorAvatar from '../components/AuthorAvatar';
 import AuthModal from '../components/AuthModal';
 import ProfileIcon from '../components/ProfileIcon';
-import { getUserProfile, onAuthStateChange } from '../services/authService';
+import { getUserProfile, onAuthStateChange, saveFavorite } from '../services/authService';
 
 const ActivityItem = ({ text }) => {
     const [checked, setChecked] = useState(false);
@@ -192,11 +193,46 @@ export default function WisdomScreen({ route, navigation }) {
                 <View style={styles.footer}>
                     <TouchableOpacity
                         style={styles.saveButton}
-                        onPress={() => {
+                        onPress={async () => {
                             if (userProfile) {
-                                // User is logged in - implement save functionality
-                                // TODO: Implement actual save to favorites functionality
-                                console.log('Save to favorites:', wisdom);
+                                // User is logged in - save to favorites
+                                try {
+                                    const { favorite, error } = await saveFavorite(
+                                        wisdom,
+                                        context,
+                                        emotions,
+                                        language
+                                    );
+
+                                    if (error) {
+                                        Alert.alert(
+                                            language === 'en' ? 'Error' : 'Lỗi',
+                                            FAVORITES_CONTENT[language].saveError
+                                        );
+                                        return;
+                                    }
+
+                                    Alert.alert(
+                                        FAVORITES_CONTENT[language].saved,
+                                        FAVORITES_CONTENT[language].savedDesc,
+                                        [
+                                            {
+                                                text: FAVORITES_CONTENT[language].viewFavorites,
+                                                onPress: () => navigation.navigate('Favorites', { language })
+                                            },
+                                            {
+                                                text: FAVORITES_CONTENT[language].ok,
+                                                style: 'cancel'
+                                            }
+                                        ]
+                                    );
+                                } catch (err) {
+                                    console.error('Save favorite error:', err);
+                                    Alert.alert(
+                                        language === 'en' ? 'Error' : 'Lỗi',
+                                        FAVORITES_CONTENT[language].saveError
+                                    );
+                                }
                             } else {
                                 // User not logged in - show auth modal
                                 authModalOpenedRef.current = true;
