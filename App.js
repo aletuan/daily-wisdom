@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Asset } from 'expo-asset';
 import {
@@ -50,10 +51,12 @@ export default function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <UserProvider>
-        <AppNavigator />
-      </UserProvider>
-    </ErrorBoundary>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ErrorBoundary>
+        <UserProvider>
+          <AppNavigator />
+        </UserProvider>
+      </ErrorBoundary>
+    </GestureHandlerRootView>
   );
 }

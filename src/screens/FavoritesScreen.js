@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
+import { Swipeable } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { FONTS } from '../styles/typography';
@@ -242,29 +244,49 @@ export default function FavoritesScreen({ route, navigation }) {
                 showsVerticalScrollIndicator={false}
             >
                 {recentFavorites.map((favorite) => (
-                    <TouchableOpacity
+                    <Swipeable
                         key={favorite.id}
-                        style={styles.favoriteCard}
-                        onPress={() => handleFavoritePress(favorite)}
-                        activeOpacity={0.7}
+                        renderLeftActions={(progress, dragX) => {
+                            const scale = dragX.interpolate({
+                                inputRange: [0, 100],
+                                outputRange: [0, 1],
+                                extrapolate: 'clamp',
+                            });
+                            return (
+                                <TouchableOpacity
+                                    style={styles.deleteButton}
+                                    onPress={() => handleDelete(favorite.id)}
+                                >
+                                    <View style={styles.deleteIconContainer}>
+                                        <MaterialIcons name="delete-outline" size={24} color={COLORS.white} />
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        }}
                     >
-                        <View style={styles.cardRow}>
-                            <AuthorAvatar authorName={favorite.author} />
-                            <View style={styles.cardContent}>
-                                <Text style={styles.quotePreview} numberOfLines={2}>
-                                    "{favorite.text}"
-                                </Text>
-                                <View style={styles.cardFooter}>
-                                    <Text style={styles.cardAuthor}>
-                                        - {favorite.author}
+                        <TouchableOpacity
+                            style={styles.favoriteCard}
+                            onPress={() => handleFavoritePress(favorite)}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.cardRow}>
+                                <AuthorAvatar authorName={favorite.author} />
+                                <View style={styles.cardContent}>
+                                    <Text style={styles.quotePreview} numberOfLines={2}>
+                                        "{favorite.text}"
                                     </Text>
-                                    <Text style={styles.cardDate}>
-                                        {formatDate(favorite.saved_at)}
-                                    </Text>
+                                    <View style={styles.cardFooter}>
+                                        <Text style={styles.cardAuthor}>
+                                            - {favorite.author}
+                                        </Text>
+                                        <Text style={styles.cardDate}>
+                                            {formatDate(favorite.saved_at)}
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </Swipeable>
                 ))}
             </ScrollView>
 
@@ -381,5 +403,20 @@ const styles = StyleSheet.create({
     cardDate: {
         fontSize: 12,
         color: COLORS.lightGrey,
+    },
+    deleteButton: {
+        backgroundColor: '#EF4444', // Red color
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 80,
+        height: '100%',
+        borderRadius: 16,
+        marginRight: 12, // Gap between button and card
+    },
+    deleteIconContainer: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
