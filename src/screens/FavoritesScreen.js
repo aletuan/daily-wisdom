@@ -246,7 +246,7 @@ export default function FavoritesScreen({ route, navigation }) {
                 {recentFavorites.map((favorite) => (
                     <Swipeable
                         key={favorite.id}
-                        renderLeftActions={(progress, dragX) => {
+                        renderRightActions={(progress, dragX) => {
                             const scale = dragX.interpolate({
                                 inputRange: [0, 100],
                                 outputRange: [0, 1],
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: '100%',
         borderRadius: 16,
-        marginRight: 12, // Gap between button and card
+        marginLeft: 12, // Gap between card and button
     },
     deleteIconContainer: {
         width: 40,
