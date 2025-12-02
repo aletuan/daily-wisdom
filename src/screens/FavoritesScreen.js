@@ -253,14 +253,15 @@ export default function FavoritesScreen({ route, navigation }) {
                                 extrapolate: 'clamp',
                             });
                             return (
-                                <TouchableOpacity
-                                    style={styles.deleteButton}
-                                    onPress={() => handleDelete(favorite.id)}
-                                >
-                                    <View style={styles.deleteIconContainer}>
+                                <View style={styles.deleteActionContainer}>
+                                    <TouchableOpacity
+                                        style={styles.deleteButton}
+                                        onPress={() => handleDelete(favorite.id)}
+                                    >
                                         <MaterialIcons name="delete-outline" size={24} color={COLORS.white} />
-                                    </View>
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                    <Text style={styles.deleteLabel}>{t.delete}</Text>
+                                </View>
                             );
                         }}
                     >
@@ -404,19 +405,24 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: COLORS.lightGrey,
     },
-    deleteButton: {
-        backgroundColor: '#EF4444', // Red color
+    deleteActionContainer: {
         justifyContent: 'center',
         alignItems: 'center',
         width: 80,
-        height: '100%',
-        borderRadius: 16,
-        marginLeft: 12, // Gap between card and button
+        marginLeft: 12,
     },
-    deleteIconContainer: {
-        width: 40,
-        height: 40,
+    deleteButton: {
+        backgroundColor: '#EF4444',
         justifyContent: 'center',
         alignItems: 'center',
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        marginBottom: 4,
+    },
+    deleteLabel: {
+        fontSize: 12,
+        color: '#EF4444',
+        fontWeight: '500',
     },
 });
