@@ -4,14 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 
 export default function BottomNavigation({ navigation, language, currentScreen }) {
-    const handleNewWisdom = () => {
-        // Navigate to Emotion screen with a generic context for getting new wisdom
-        navigation.navigate('Emotion', {
-            context: 'daily wisdom',
-            language,
-        });
-    };
-
     return (
         <View style={styles.navigationBar}>
             <TouchableOpacity
@@ -40,18 +32,22 @@ export default function BottomNavigation({ navigation, language, currentScreen }
 
             <TouchableOpacity
                 style={styles.navButton}
-                onPress={handleNewWisdom}
+                onPress={() => {
+                    if (currentScreen !== 'Onboarding') {
+                        navigation.navigate('Onboarding', { language });
+                    }
+                }}
                 activeOpacity={0.7}
             >
                 <MaterialIcons
                     name="auto-awesome"
                     size={24}
-                    color={currentScreen === 'Emotion' ? COLORS.textMain : COLORS.lightGrey}
+                    color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
                 />
                 <Text
                     style={[
                         styles.navButtonText,
-                        currentScreen === 'Emotion' && styles.navButtonActive,
+                        currentScreen === 'Onboarding' && styles.navButtonActive,
                     ]}
                 >
                     Wisdom
