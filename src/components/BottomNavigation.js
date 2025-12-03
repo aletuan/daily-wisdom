@@ -4,16 +4,32 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 
 export default function BottomNavigation({ navigation, language, currentScreen }) {
-    const handleNewWisdom = () => {
-        // Navigate to Emotion screen with a generic context for getting new wisdom
-        navigation.navigate('Emotion', {
-            context: 'daily wisdom',
-            language,
-        });
-    };
-
     return (
         <View style={styles.navigationBar}>
+            <TouchableOpacity
+                style={styles.navButton}
+                onPress={() => {
+                    if (currentScreen !== 'Onboarding') {
+                        navigation.navigate('Onboarding', { language });
+                    }
+                }}
+                activeOpacity={0.7}
+            >
+                <MaterialIcons
+                    name="auto-awesome"
+                    size={24}
+                    color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
+                />
+                <Text
+                    style={[
+                        styles.navButtonText,
+                        currentScreen === 'Onboarding' && styles.navButtonActive,
+                    ]}
+                >
+                    Wisdom
+                </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
                 style={styles.navButton}
                 onPress={() => {
@@ -35,26 +51,6 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                     ]}
                 >
                     Explore
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.navButton}
-                onPress={handleNewWisdom}
-                activeOpacity={0.7}
-            >
-                <MaterialIcons
-                    name="auto-awesome"
-                    size={24}
-                    color={currentScreen === 'Emotion' ? COLORS.textMain : COLORS.lightGrey}
-                />
-                <Text
-                    style={[
-                        styles.navButtonText,
-                        currentScreen === 'Emotion' && styles.navButtonActive,
-                    ]}
-                >
-                    Wisdom
                 </Text>
             </TouchableOpacity>
 
