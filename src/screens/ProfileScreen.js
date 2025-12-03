@@ -184,6 +184,18 @@ export default function ProfileScreen({ route, navigation }) {
             return false;
         }
 
+        if (!email.trim()) {
+            setError(t.emailRequired || 'Email is required');
+            return false;
+        }
+
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            setError(t.invalidEmail || 'Please enter a valid email address');
+            return false;
+        }
+
         if (!gender) {
             setError(t.genderRequired);
             return false;
@@ -220,6 +232,7 @@ export default function ProfileScreen({ route, navigation }) {
         try {
             const profileData = {
                 nickname: nickname.trim(),
+                email: email.trim(),
                 gender,
                 date_of_birth: dateOfBirth.toISOString().split('T')[0], // YYYY-MM-DD format
             };
@@ -332,15 +345,18 @@ export default function ProfileScreen({ route, navigation }) {
                     />
                 </View>
 
-                {/* Email Display (Read-only) */}
+                {/* Email Input */}
                 <View style={styles.fieldContainer}>
                     <Text style={styles.label}>{t.email}</Text>
                     <TextInput
-                        style={[styles.input, styles.inputReadonly]}
+                        style={styles.input}
                         placeholder={t.emailLabel}
                         placeholderTextColor={COLORS.lightGrey}
                         value={email}
-                        editable={false}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoCorrect={false}
                     />
                 </View>
 
