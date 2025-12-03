@@ -60,21 +60,21 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     buttonRed: {
-        backgroundColor: '#FEF2F2',
-        borderColor: '#FEE2E2',
+        backgroundColor: '#F9F7F5',
+        borderColor: '#EFEAE5',
     },
     buttonRedSelected: {
-        backgroundColor: '#FEE2E2',
-        borderColor: '#FCA5A5',
-        elevation: 3,
-        shadowOpacity: 0.15,
+        backgroundColor: '#F0EBE6',
+        borderColor: '#D4C7BA',
+        elevation: 1,
+        shadowOpacity: 0.05,
     },
     textRed: {
-        color: '#991B1B',
-        fontWeight: '600',
+        color: '#7E6E5F',
+        fontWeight: '500',
     },
     textRedSelected: {
-        color: '#DC2626',
-        fontWeight: '700',
+        color: '#7E6E5F',
+        fontWeight: '600',
     },
 });

@@ -24,10 +24,10 @@ const ICONS = {
 };
 
 const COLOR_THEMES = {
-    direction: 'blue',
-    habits: 'green',
-    stress: 'orange',
-    growth: 'purple',
+    direction: 'sky',
+    habits: 'sage',
+    stress: 'stone',
+    growth: 'warm',
 };
 
 export default function OnboardingScreen({ navigation, route }) {
@@ -194,7 +194,7 @@ export default function OnboardingScreen({ navigation, route }) {
                             ref={inputRef}
                             style={[styles.zenInput, { fontFamily: FONTS.serif.regular }]}
                             placeholder={t.customPlaceholder}
-                            placeholderTextColor={COLORS.lightGrey}
+                            placeholderTextColor="#C4C3BE"
                             value={customText}
                             onChangeText={setCustomText}
                             multiline
@@ -240,17 +240,19 @@ const styles = StyleSheet.create({
         paddingTop: 32,
     },
     greeting: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: COLORS.darkGreen,
+        fontSize: 23,
+        fontWeight: '500',
+        color: '#5A6B5E',
         marginBottom: 16,
         lineHeight: 32,
+        letterSpacing: -0.3,
     },
     question: {
-        fontSize: 18,
-        color: COLORS.textSecondary,
+        fontSize: 17,
+        color: '#8B8A84',
         marginBottom: 32,
         lineHeight: 26,
+        fontWeight: '400',
     },
     gridContainer: {
         flexDirection: 'row',
@@ -270,17 +272,19 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     backLinkText: {
-        color: COLORS.textSecondary,
+        color: '#8B8A84',
         fontSize: 14,
         fontFamily: FONTS.sans.regular,
+        fontWeight: '400',
     },
     zenInput: {
-        fontSize: 24,
-        color: COLORS.textMain,
+        fontSize: 22,
+        color: '#5A6B5E',
         lineHeight: 34,
         minHeight: 200,
         padding: 0,
         textAlignVertical: 'top',
+        fontWeight: '400',
     },
     footer: {
         padding: 24,
@@ -288,19 +292,24 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
     },
     continueButton: {
-        backgroundColor: '#333333',
+        backgroundColor: '#7A9B88',
         paddingVertical: 16,
         paddingHorizontal: 32,
         borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
     continueButtonDisabled: {
-        backgroundColor: COLORS.lightGrey,
+        backgroundColor: '#E8EBE8',
     },
     continueButtonText: {
         color: COLORS.white,
-        fontSize: 18,
-        fontWeight: '600',
+        fontSize: 16,
+        fontWeight: '500',
         textAlign: 'center',
-        letterSpacing: 0.5,
+        letterSpacing: 0.3,
     },
 });

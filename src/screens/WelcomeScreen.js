@@ -165,18 +165,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     langText: {
-        fontSize: 16,
-        color: COLORS.lightGrey,
-        fontWeight: '600',
+        fontSize: 15,
+        color: '#C4C3BE',
+        fontWeight: '500',
         paddingHorizontal: 4,
     },
     langTextActive: {
-        color: COLORS.darkGreen,
-        fontWeight: 'bold',
+        color: '#7A9B88',
+        fontWeight: '600',
     },
     langDivider: {
-        fontSize: 16,
-        color: COLORS.lightGrey,
+        fontSize: 15,
+        color: '#E8EBE8',
         marginHorizontal: 4,
     },
     content: {
@@ -187,20 +187,21 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title: {
-        fontSize: 32,
-        fontWeight: 'bold',
+        fontSize: 30,
+        fontWeight: '600',
         marginBottom: 15,
         textAlign: 'center',
-        color: COLORS.textMain, // Darker Green for title
-        letterSpacing: 1,
+        color: '#5A6B5E',
+        letterSpacing: -0.5,
     },
     subtitle: {
-        fontSize: 18,
-        color: COLORS.textSecondary, // Blue Grey for subtitle
+        fontSize: 17,
+        color: '#8B8A84',
         marginBottom: 20,
         textAlign: 'center',
         lineHeight: 26,
         paddingHorizontal: 20,
+        fontWeight: '400',
     },
     image: {
         width: 250,
@@ -208,29 +209,35 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     button: {
-        backgroundColor: '#333333', // Dark gray button
+        backgroundColor: '#7A9B88',
         paddingHorizontal: 32,
         paddingVertical: 16,
         borderRadius: 12,
         alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
     buttonText: {
         color: COLORS.white,
-        fontSize: 18,
-        fontWeight: '600',
-        letterSpacing: 0.5,
+        fontSize: 16,
+        fontWeight: '500',
+        letterSpacing: 0.3,
     },
     signInContainer: {
         marginTop: 24,
         alignItems: 'center',
     },
     signInText: {
-        fontSize: 14,
-        color: COLORS.textSecondary,
+        fontSize: 13,
+        color: '#8B8A84',
+        fontWeight: '400',
     },
     signInLink: {
-        color: COLORS.textMain,
-        fontWeight: '600',
+        color: '#7A9B88',
+        fontWeight: '500',
     },
     carousel: {
         flexGrow: 0,
@@ -247,11 +254,12 @@ const styles = StyleSheet.create({
         minHeight: 80,
     },
     carouselText: {
-        fontSize: 16,
-        color: COLORS.textSecondary,
+        fontSize: 15,
+        color: '#7E6E5F',
         textAlign: 'center',
         lineHeight: 24,
         fontStyle: 'italic',
+        fontWeight: '400',
     },
     paginationContainer: {
         flexDirection: 'row',
@@ -261,14 +269,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     paginationDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: COLORS.lightGrey,
+        width: 7,
+        height: 7,
+        borderRadius: 3.5,
+        backgroundColor: '#E8EBE8',
         marginHorizontal: 4,
     },
     paginationDotActive: {
-        backgroundColor: COLORS.darkGreen,
-        width: 24,
+        backgroundColor: '#7A9B88',
+        width: 22,
     },
 });

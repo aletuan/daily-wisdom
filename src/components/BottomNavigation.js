@@ -17,7 +17,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
             >
                 <Compass
                     size={24}
-                    color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
+                    color={currentScreen === 'Onboarding' ? '#7A9B88' : '#C4C3BE'}
                 />
                 <Text
                     style={[
@@ -40,7 +40,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
             >
                 <Sparkles
                     size={24}
-                    color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
+                    color={currentScreen === 'Onboarding' ? '#7A9B88' : '#C4C3BE'}
                 />
                 <Text
                     style={[
@@ -63,8 +63,8 @@ export default function BottomNavigation({ navigation, language, currentScreen }
             >
                 <Heart
                     size={24}
-                    color={currentScreen === 'Favorites' ? COLORS.textMain : COLORS.lightGrey}
-                    fill={currentScreen === 'Favorites' ? COLORS.textMain : 'none'}
+                    color={currentScreen === 'Favorites' ? '#7A9B88' : '#C4C3BE'}
+                    fill={currentScreen === 'Favorites' ? '#7A9B88' : 'none'}
                 />
                 <Text
                     style={[
@@ -87,7 +87,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
             >
                 <User
                     size={24}
-                    color={currentScreen === 'Profile' ? COLORS.textMain : COLORS.lightGrey}
+                    color={currentScreen === 'Profile' ? '#7A9B88' : '#C4C3BE'}
                 />
                 <Text
                     style={[
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
+        borderTopColor: '#F0EBE6',
         paddingBottom: Platform.OS === 'ios' ? 28 : 12,
     },
     navButton: {
@@ -120,12 +120,13 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     navButtonText: {
-        fontSize: 12,
-        color: COLORS.lightGrey,
+        fontSize: 11,
+        color: '#C4C3BE',
         marginTop: 4,
+        fontWeight: '400',
     },
     navButtonActive: {
-        color: COLORS.textMain,
-        fontWeight: '600',
+        color: '#7A9B88',
+        fontWeight: '500',
     },
 });

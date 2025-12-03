@@ -3,43 +3,43 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 
-// Color themes for each card
+// Calm, muted color themes for each card
 const COLOR_THEMES = {
-    blue: {
-        background: '#EFF6FF',
-        border: '#DBEAFE',
-        icon: '#3B82F6',
-        text: '#1E40AF',
-        selectedBg: '#3B82F6',
-        selectedBorder: '#2563EB',
+    sage: {
+        background: '#F5F7F5',
+        border: '#E8EBE8',
+        icon: '#7A9B88',
+        text: '#5A6B5E',
+        selectedBg: '#E8F0EB',
+        selectedBorder: '#B8CFC0',
     },
-    green: {
-        background: '#F0FDF4',
-        border: '#DCFCE7',
-        icon: '#22C55E',
-        text: '#166534',
-        selectedBg: '#22C55E',
-        selectedBorder: '#16A34A',
+    stone: {
+        background: '#F7F7F6',
+        border: '#E9E9E7',
+        icon: '#8B8A84',
+        text: '#5C5B57',
+        selectedBg: '#EAEAE8',
+        selectedBorder: '#C4C3BE',
     },
-    orange: {
-        background: '#FFF7ED',
-        border: '#FFEDD5',
-        icon: '#F97316',
-        text: '#C2410C',
-        selectedBg: '#F97316',
-        selectedBorder: '#EA580C',
+    sky: {
+        background: '#F5F7F9',
+        border: '#E7EBF0',
+        icon: '#7B91A8',
+        text: '#556B7E',
+        selectedBg: '#E8EDF3',
+        selectedBorder: '#B8C7D6',
     },
-    purple: {
-        background: '#FAF5FF',
-        border: '#F3E8FF',
-        icon: '#A855F7',
-        text: '#7E22CE',
-        selectedBg: '#A855F7',
-        selectedBorder: '#9333EA',
+    warm: {
+        background: '#F9F7F5',
+        border: '#EFEAE5',
+        icon: '#A89384',
+        text: '#7E6E5F',
+        selectedBg: '#F0EBE6',
+        selectedBorder: '#D4C7BA',
     },
 };
 
-export default function SelectionCard({ label, icon: Icon, selected, onPress, colorTheme = 'blue' }) {
+export default function SelectionCard({ label, icon: Icon, selected, onPress, colorTheme = 'sage' }) {
     const theme = COLOR_THEMES[colorTheme];
 
     return (
@@ -50,15 +50,15 @@ export default function SelectionCard({ label, icon: Icon, selected, onPress, co
                 selected && { backgroundColor: theme.selectedBg, borderColor: theme.selectedBorder }
             ]}
             onPress={onPress}
-            activeOpacity={0.7}
+            activeOpacity={0.8}
         >
             <View style={styles.iconContainer}>
-                <Icon color={selected ? COLORS.white : theme.icon} width={48} height={48} />
+                <Icon color={theme.icon} width={44} height={44} />
             </View>
             <Text style={[
                 styles.text,
                 { color: theme.text },
-                selected && styles.textSelected,
+                selected && { fontWeight: '600' },
                 TYPOGRAPHY.body
             ]}>
                 {label}
@@ -69,30 +69,27 @@ export default function SelectionCard({ label, icon: Icon, selected, onPress, co
 
 const styles = StyleSheet.create({
     card: {
-        borderRadius: 20,
-        padding: 20,
+        borderRadius: 16,
+        padding: 24,
         marginBottom: 16,
-        borderWidth: 2,
-        elevation: 2,
+        borderWidth: 1,
+        elevation: 1,
         shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.03,
+        shadowRadius: 3,
         width: '48%', // Approx half width for 2-column grid
         aspectRatio: 1, // Square shape
         justifyContent: 'center',
         alignItems: 'center',
     },
     iconContainer: {
-        marginBottom: 16,
+        marginBottom: 12,
     },
     text: {
-        fontSize: 16,
-        color: COLORS.textMain,
+        fontSize: 15,
         textAlign: 'center',
-        fontWeight: '600',
-    },
-    textSelected: {
-        color: COLORS.white,
+        fontWeight: '500',
+        lineHeight: 20,
     },
 });
