@@ -33,6 +33,7 @@ export default function OnboardingScreen({ navigation, route }) {
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
+    const [customTextSaved, setCustomTextSaved] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [showEmotionSection, setShowEmotionSection] = useState(false);
     const [overwhelmedHopeful, setOverwhelmedHopeful] = useState(50);
@@ -129,16 +130,21 @@ export default function OnboardingScreen({ navigation, route }) {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedOption(null);
         setCustomText('');
+        setCustomTextSaved(false);
         setShowEmotionSection(false);
     };
 
     const handleSave = () => {
-        // When Save is clicked in Zen mode, show emotion section
+        // When Save is clicked in Zen mode, return to main view with emotion section
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setCustomTextSaved(true);
         setShowEmotionSection(true);
-        // Scroll to emotion section after a short delay
+        // Scroll to top first, then to emotion section
         setTimeout(() => {
-            scrollViewRef.current?.scrollToEnd({ animated: true });
+            scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+            setTimeout(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+            }, 100);
         }, 300);
     };
 
@@ -159,6 +165,7 @@ export default function OnboardingScreen({ navigation, route }) {
     };
 
     const isCustomSelected = selectedOption === 'custom';
+    const showZenMode = isCustomSelected && !customTextSaved;
     const canContinue = selectedOption && (!isCustomSelected || customText.trim().length > 0);
     const canSave = isCustomSelected && customText.trim().length > 0;
     const showContinueButton = showEmotionSection;
@@ -172,11 +179,11 @@ export default function OnboardingScreen({ navigation, route }) {
             <ScrollView
                 ref={scrollViewRef}
                 style={styles.scrollView}
-                contentContainerStyle={[styles.content, isCustomSelected && { paddingBottom: 200 }]}
+                contentContainerStyle={[styles.content, showZenMode && { paddingBottom: 200 }]}
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
             >
-                {!isCustomSelected && (
+                {!showZenMode && (
                     <>
                         <Text style={[styles.greeting, TYPOGRAPHY.h2]}>{t.greeting}</Text>
                         <Text style={[styles.question, TYPOGRAPHY.body]}>{t.question}</Text>
@@ -204,7 +211,7 @@ export default function OnboardingScreen({ navigation, route }) {
                     </>
                 )}
 
-                {isCustomSelected && (
+                {showZenMode && (
                     <View style={styles.zenContainer}>
                         <TouchableOpacity onPress={handleBackToOptions} style={styles.backLink}>
                             <Text style={styles.backLinkText}>{t.backToOptions}</Text>

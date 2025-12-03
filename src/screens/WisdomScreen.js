@@ -9,6 +9,7 @@ import { FAVORITES_CONTENT } from '../data/favoritesContent';
 import AuthorAvatar from '../components/AuthorAvatar';
 import AuthModal from '../components/AuthModal';
 import ProfileIcon from '../components/ProfileIcon';
+import BottomNavigation from '../components/BottomNavigation';
 import { getUserProfile, onAuthStateChange, saveFavorite } from '../services/authService';
 import { useUser } from '../contexts/UserContext';
 
@@ -215,6 +216,13 @@ export default function WisdomScreen({ route, navigation }) {
                 onClose={() => setShowAuthModal(false)}
                 language={language}
             />
+
+            {/* Bottom Navigation Bar */}
+            <BottomNavigation
+                navigation={navigation}
+                language={language}
+                currentScreen="Wisdom"
+            />
         </View>
     );
 }
@@ -348,8 +356,6 @@ const styles = StyleSheet.create({
         padding: 24,
         paddingBottom: 40,
         backgroundColor: COLORS.white,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
     },
     saveButton: {
         backgroundColor: '#333333',
