@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     backArrow: {
-        color: COLORS.textMain,
+        color: '#7A9B88',
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: '500',
     },
 });

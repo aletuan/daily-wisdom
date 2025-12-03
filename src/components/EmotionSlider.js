@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 
 export default function EmotionSlider({ leftLabel, rightLabel, value, onValueChange }) {
@@ -17,9 +16,9 @@ export default function EmotionSlider({ leftLabel, rightLabel, value, onValueCha
                 maximumValue={100}
                 value={value}
                 onValueChange={onValueChange}
-                minimumTrackTintColor="#000000"
-                maximumTrackTintColor="#E0E0E0"
-                thumbTintColor="#000000"
+                minimumTrackTintColor="#7A9B88"
+                maximumTrackTintColor="#E8EBE8"
+                thumbTintColor="#7A9B88"
             />
         </View>
     );
@@ -35,9 +34,9 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     label: {
-        fontSize: 14,
-        color: COLORS.textSecondary,
-        fontWeight: '500',
+        fontSize: 13,
+        color: '#8B8A84',
+        fontWeight: '400',
     },
     slider: {
         width: '100%',
