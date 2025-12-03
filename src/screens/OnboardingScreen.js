@@ -6,8 +6,10 @@ import { COLORS } from '../styles/colors';
 import { FONTS, TYPOGRAPHY } from '../styles/typography';
 import { getOnboardingOptions } from '../data/onboardingOptions';
 import { ONBOARDING_CONTENT } from '../data/onboardingContent';
+import { EMOTION_CONTENT } from '../data/emotionContent';
 import OptionButton from '../components/OptionButton';
 import SelectionCard from '../components/SelectionCard';
+import EmotionSlider from '../components/EmotionSlider';
 import DirectionIcon from '../components/icons/DirectionIcon';
 import HabitIcon from '../components/icons/HabitIcon';
 import StressIcon from '../components/icons/StressIcon';
@@ -26,13 +28,18 @@ const ICONS = {
 export default function OnboardingScreen({ navigation, route }) {
     const language = route.params?.language || 'en';
     const t = ONBOARDING_CONTENT[language];
+    const emotionT = EMOTION_CONTENT[language];
     const options = getOnboardingOptions(language);
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [customText, setCustomText] = useState('');
     const [userProfile, setUserProfile] = useState(null);
+    const [showEmotionSection, setShowEmotionSection] = useState(false);
+    const [overwhelmedHopeful, setOverwhelmedHopeful] = useState(50);
+    const [stuckProgress, setStuckProgress] = useState(50);
     const scrollViewRef = useRef(null);
     const inputRef = useRef(null);
+    const emotionSectionRef = useRef(null);
     const headerHeight = useHeaderHeight();
 
     if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -107,12 +114,32 @@ export default function OnboardingScreen({ navigation, route }) {
     const handleOptionSelect = (id) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedOption(id);
+
+        // Show emotion section when a card (non-custom) option is selected
+        if (id !== 'custom') {
+            setShowEmotionSection(true);
+            // Scroll to emotion section after a short delay
+            setTimeout(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+            }, 300);
+        }
     };
 
     const handleBackToOptions = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedOption(null);
         setCustomText('');
+        setShowEmotionSection(false);
+    };
+
+    const handleSave = () => {
+        // When Save is clicked in Zen mode, show emotion section
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setShowEmotionSection(true);
+        // Scroll to emotion section after a short delay
+        setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 300);
     };
 
     const handleContinue = () => {
@@ -120,12 +147,21 @@ export default function OnboardingScreen({ navigation, route }) {
             options.find(opt => opt.id === selectedOption)?.label;
 
         if (context) {
-            navigation.navigate('Emotion', { context, language });
+            navigation.navigate('Wisdom', {
+                context,
+                language,
+                emotions: {
+                    overwhelmedHopeful,
+                    stuckProgress,
+                },
+            });
         }
     };
 
     const isCustomSelected = selectedOption === 'custom';
     const canContinue = selectedOption && (!isCustomSelected || customText.trim().length > 0);
+    const canSave = isCustomSelected && customText.trim().length > 0;
+    const showContinueButton = showEmotionSection;
 
     return (
         <KeyboardAvoidingView
@@ -184,20 +220,61 @@ export default function OnboardingScreen({ navigation, route }) {
                             multiline
                             textAlignVertical="top"
                         />
+
+                        {!showEmotionSection && (
+                            <View style={styles.zenSaveButtonContainer}>
+                                <TouchableOpacity
+                                    style={[styles.continueButton, !canSave && styles.continueButtonDisabled]}
+                                    onPress={handleSave}
+                                    disabled={!canSave}
+                                    activeOpacity={0.8}
+                                >
+                                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>Save</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </View>
+                )}
+
+                {/* Emotion Section */}
+                {showEmotionSection && (
+                    <View ref={emotionSectionRef} style={styles.emotionSection}>
+                        <Text style={[styles.emotionQuestion, TYPOGRAPHY.h2]}>{emotionT.question}</Text>
+
+                        <View style={styles.slidersContainer}>
+                            <EmotionSlider
+                                leftLabel={emotionT.overwhelmed}
+                                rightLabel={emotionT.hopeful}
+                                value={overwhelmedHopeful}
+                                onValueChange={setOverwhelmedHopeful}
+                            />
+
+                            <EmotionSlider
+                                leftLabel={emotionT.stuck}
+                                rightLabel={emotionT.makingProgress}
+                                value={stuckProgress}
+                                onValueChange={setStuckProgress}
+                            />
+                        </View>
+
+                        <Text style={[styles.hint, TYPOGRAPHY.caption, { fontStyle: 'italic' }]}>
+                            {emotionT.hint}
+                        </Text>
                     </View>
                 )}
             </ScrollView>
 
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={[styles.continueButton, !canContinue && styles.continueButtonDisabled]}
-                    onPress={handleContinue}
-                    disabled={!canContinue}
-                    activeOpacity={0.8}
-                >
-                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
-                </TouchableOpacity>
-            </View>
+            {showContinueButton && (
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={styles.continueButton}
+                        onPress={handleContinue}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
             {/* Bottom Navigation Bar */}
             <BottomNavigation
@@ -263,6 +340,31 @@ const styles = StyleSheet.create({
         minHeight: 200,
         padding: 0,
         textAlignVertical: 'top',
+    },
+    zenSaveButtonContainer: {
+        marginTop: 32,
+    },
+    emotionSection: {
+        marginTop: 40,
+        paddingTop: 32,
+        borderTopWidth: 1,
+        borderTopColor: '#E0E0E0',
+    },
+    emotionQuestion: {
+        fontSize: 22,
+        fontWeight: '600',
+        color: COLORS.darkGreen,
+        marginBottom: 40,
+        lineHeight: 30,
+    },
+    slidersContainer: {
+        marginBottom: 24,
+    },
+    hint: {
+        fontSize: 14,
+        color: COLORS.textSecondary,
+        fontStyle: 'italic',
+        textAlign: 'center',
     },
     footer: {
         padding: 24,
