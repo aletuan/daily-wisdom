@@ -16,30 +16,6 @@ export default function BottomNavigation({ navigation, language, currentScreen }
         <View style={styles.navigationBar}>
             <TouchableOpacity
                 style={styles.navButton}
-                onPress={() => {
-                    if (currentScreen !== 'Profile') {
-                        navigation.navigate('Profile', { language });
-                    }
-                }}
-                activeOpacity={0.7}
-            >
-                <MaterialIcons
-                    name="person"
-                    size={24}
-                    color={currentScreen === 'Profile' ? COLORS.textMain : COLORS.lightGrey}
-                />
-                <Text
-                    style={[
-                        styles.navButtonText,
-                        currentScreen === 'Profile' && styles.navButtonActive,
-                    ]}
-                >
-                    Profile
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={styles.navButton}
                 onPress={handleNewWisdom}
                 activeOpacity={0.7}
             >
@@ -79,6 +55,30 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                     ]}
                 >
                     Favorites
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.navButton}
+                onPress={() => {
+                    if (currentScreen !== 'Profile') {
+                        navigation.navigate('Profile', { language });
+                    }
+                }}
+                activeOpacity={0.7}
+            >
+                <MaterialIcons
+                    name="person"
+                    size={24}
+                    color={currentScreen === 'Profile' ? COLORS.textMain : COLORS.lightGrey}
+                />
+                <Text
+                    style={[
+                        styles.navButtonText,
+                        currentScreen === 'Profile' && styles.navButtonActive,
+                    ]}
+                >
+                    Profile
                 </Text>
             </TouchableOpacity>
         </View>
