@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
@@ -7,6 +7,7 @@ import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
 import { getUserProfile, updateProfile, uploadAvatar, signOut, calculateZodiacSign } from '../services/authService';
 import { useUser } from '../contexts/UserContext';
+import BottomNavigation from '../components/BottomNavigation';
 
 export default function ProfileScreen({ route, navigation }) {
     const { language = 'en' } = route.params || {};
@@ -423,6 +424,13 @@ export default function ProfileScreen({ route, navigation }) {
                     )}
                 </TouchableOpacity>
             </View>
+
+            {/* Bottom Navigation Bar */}
+            <BottomNavigation
+                navigation={navigation}
+                language={language}
+                currentScreen="Profile"
+            />
         </View>
     );
 }
@@ -549,8 +557,6 @@ const styles = StyleSheet.create({
         padding: 24,
         paddingBottom: 40,
         backgroundColor: COLORS.white,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
     },
     saveButton: {
         backgroundColor: '#333333',

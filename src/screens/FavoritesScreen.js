@@ -12,6 +12,7 @@ import { getFavorites, getFavoritesByDate, deleteFavorite, getUserProfile, onAut
 import AuthorAvatar from '../components/AuthorAvatar';
 import ProfileIcon from '../components/ProfileIcon';
 import WisdomDetailModal from '../components/WisdomDetailModal';
+import BottomNavigation from '../components/BottomNavigation';
 
 export default function FavoritesScreen({ route, navigation }) {
     const { language = 'en' } = route.params || {};
@@ -179,6 +180,11 @@ export default function FavoritesScreen({ route, navigation }) {
                         {t.loading}
                     </Text>
                 </View>
+                <BottomNavigation
+                    navigation={navigation}
+                    language={language}
+                    currentScreen="Favorites"
+                />
             </View>
         );
     }
@@ -194,6 +200,11 @@ export default function FavoritesScreen({ route, navigation }) {
                         {t.emptyStateDesc}
                     </Text>
                 </View>
+                <BottomNavigation
+                    navigation={navigation}
+                    language={language}
+                    currentScreen="Favorites"
+                />
             </View>
         );
     }
@@ -298,6 +309,13 @@ export default function FavoritesScreen({ route, navigation }) {
                 favorite={selectedFavorite}
                 language={language}
                 onDelete={handleDelete}
+            />
+
+            {/* Bottom Navigation Bar */}
+            <BottomNavigation
+                navigation={navigation}
+                language={language}
+                currentScreen="Favorites"
             />
         </View>
     );
