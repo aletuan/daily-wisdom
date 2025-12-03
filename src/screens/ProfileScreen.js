@@ -33,6 +33,16 @@ export default function ProfileScreen({ route, navigation }) {
         loadProfile();
     }, []);
 
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7} style={{ marginRight: 16 }}>
+                    <Text style={{ fontSize: 16, color: COLORS.textMain }}>{t.signOut}</Text>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation, t]);
+
     const loadProfile = async () => {
         setLoading(true);
         setError('');
@@ -398,7 +408,7 @@ export default function ProfileScreen({ route, navigation }) {
                 )}
             </ScrollView>
 
-            {/* Footer with Buttons */}
+            {/* Footer with Save Button */}
             <View style={styles.footer}>
                 <TouchableOpacity
                     style={[styles.saveButton, saving && styles.buttonDisabled]}
@@ -411,14 +421,6 @@ export default function ProfileScreen({ route, navigation }) {
                     ) : (
                         <Text style={styles.saveButtonText}>{t.save}</Text>
                     )}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.signOutButton}
-                    onPress={handleSignOut}
-                    activeOpacity={0.8}
-                >
-                    <Text style={styles.signOutButtonText}>{t.signOut}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -556,25 +558,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 12,
         alignItems: 'center',
-        marginBottom: 12,
     },
     saveButtonText: {
         color: COLORS.white,
-        fontSize: 16,
-        fontWeight: '600',
-        letterSpacing: 0.5,
-    },
-    signOutButton: {
-        backgroundColor: COLORS.white,
-        paddingVertical: 16,
-        paddingHorizontal: 32,
-        borderRadius: 12,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-    },
-    signOutButtonText: {
-        color: COLORS.textMain,
         fontSize: 16,
         fontWeight: '600',
         letterSpacing: 0.5,
