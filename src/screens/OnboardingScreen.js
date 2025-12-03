@@ -354,8 +354,6 @@ const styles = StyleSheet.create({
     emotionSection: {
         marginTop: 40,
         paddingTop: 32,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
     },
     emotionQuestion: {
         fontSize: 22,
