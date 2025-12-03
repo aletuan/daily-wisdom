@@ -6,10 +6,12 @@ import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
 import { getUserProfile, updateProfile, uploadAvatar, signOut, calculateZodiacSign } from '../services/authService';
+import { useUser } from '../contexts/UserContext';
 
 export default function ProfileScreen({ route, navigation }) {
     const { language = 'en' } = route.params || {};
     const t = PROFILE_CONTENT[language];
+    const { refreshProfile } = useUser();
 
     // Profile data state
     const [profile, setProfile] = useState(null);
@@ -30,6 +32,16 @@ export default function ProfileScreen({ route, navigation }) {
     useEffect(() => {
         loadProfile();
     }, []);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7} style={{ marginRight: 16 }}>
+                    <Text style={{ fontSize: 16, color: COLORS.textMain }}>{t.signOut}</Text>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation, t]);
 
     const loadProfile = async () => {
         setLoading(true);
@@ -111,6 +123,8 @@ export default function ProfileScreen({ route, navigation }) {
 
             if (updateError) {
                 setError(t.updateError);
+            } else {
+                refreshProfile(); // Update global context
             }
         } catch (err) {
             console.error('Avatar upload error:', err);
@@ -216,6 +230,8 @@ export default function ProfileScreen({ route, navigation }) {
                 return;
             }
 
+            refreshProfile(); // Update global context
+
             // Show success message without reloading screen
             Alert.alert('Success', t.saveSuccess);
         } catch (err) {
@@ -240,6 +256,7 @@ export default function ProfileScreen({ route, navigation }) {
                         if (error) {
                             setError(t.signOutError);
                         } else {
+                            refreshProfile(); // Clear global context
                             // Navigate to Welcome screen
                             navigation.reset({
                                 index: 0,
@@ -391,7 +408,7 @@ export default function ProfileScreen({ route, navigation }) {
                 )}
             </ScrollView>
 
-            {/* Footer with Buttons */}
+            {/* Footer with Save Button */}
             <View style={styles.footer}>
                 <TouchableOpacity
                     style={[styles.saveButton, saving && styles.buttonDisabled]}
@@ -404,14 +421,6 @@ export default function ProfileScreen({ route, navigation }) {
                     ) : (
                         <Text style={styles.saveButtonText}>{t.save}</Text>
                     )}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.signOutButton}
-                    onPress={handleSignOut}
-                    activeOpacity={0.8}
-                >
-                    <Text style={styles.signOutButtonText}>{t.signOut}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -549,25 +558,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 12,
         alignItems: 'center',
-        marginBottom: 12,
     },
     saveButtonText: {
         color: COLORS.white,
-        fontSize: 16,
-        fontWeight: '600',
-        letterSpacing: 0.5,
-    },
-    signOutButton: {
-        backgroundColor: COLORS.white,
-        paddingVertical: 16,
-        paddingHorizontal: 32,
-        borderRadius: 12,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-    },
-    signOutButtonText: {
-        color: COLORS.textMain,
         fontSize: 16,
         fontWeight: '600',
         letterSpacing: 0.5,

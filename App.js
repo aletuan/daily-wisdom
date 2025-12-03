@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Asset } from 'expo-asset';
 import {
@@ -13,6 +14,7 @@ import {
 } from '@expo-google-fonts/inter';
 import AppNavigator from './src/navigation/AppNavigator';
 import ErrorBoundary from './src/components/ErrorBoundary';
+import { UserProvider } from './src/contexts/UserContext';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -49,8 +51,12 @@ export default function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <AppNavigator />
-    </ErrorBoundary>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ErrorBoundary>
+        <UserProvider>
+          <AppNavigator />
+        </UserProvider>
+      </ErrorBoundary>
+    </GestureHandlerRootView>
   );
 }

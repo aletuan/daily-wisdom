@@ -13,55 +13,6 @@ export default function EmotionScreen({ route, navigation }) {
     const t = EMOTION_CONTENT[language];
     const [overwhelmedHopeful, setOverwhelmedHopeful] = useState(50);
     const [stuckProgress, setStuckProgress] = useState(50);
-    const [userProfile, setUserProfile] = useState(null);
-
-    useEffect(() => {
-        loadUserProfile();
-
-        // Listen for auth state changes
-        const { data: authListener } = onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-                loadUserProfile();
-            } else if (event === 'SIGNED_OUT') {
-                setUserProfile(null);
-            }
-        });
-
-        return () => {
-            authListener?.subscription?.unsubscribe();
-        };
-    }, []);
-
-    // Reload profile when screen comes into focus (e.g., after uploading avatar)
-    useFocusEffect(
-        React.useCallback(() => {
-            loadUserProfile();
-        }, [])
-    );
-
-    useEffect(() => {
-        navigation.setOptions({
-            headerRight: () =>
-                userProfile ? (
-                    <View style={{ marginRight: 16 }}>
-                        <ProfileIcon
-                            nickname={userProfile.nickname}
-                            avatarUrl={userProfile.avatar_url}
-                            onPress={() => {
-                                navigation.navigate('Profile', { language });
-                            }}
-                        />
-                    </View>
-                ) : null,
-        });
-    }, [userProfile, navigation]);
-
-    const loadUserProfile = async () => {
-        const { profile, error } = await getUserProfile();
-        if (profile && !error) {
-            setUserProfile(profile);
-        }
-    };
 
     const handleContinue = () => {
         navigation.navigate('Wisdom', {
