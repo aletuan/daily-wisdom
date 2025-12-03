@@ -23,6 +23,13 @@ const ICONS = {
     growth: GrowthIcon,
 };
 
+const COLOR_THEMES = {
+    direction: 'blue',
+    habits: 'green',
+    stress: 'orange',
+    growth: 'purple',
+};
+
 export default function OnboardingScreen({ navigation, route }) {
     const language = route.params?.language || 'en';
     const t = ONBOARDING_CONTENT[language];
@@ -161,6 +168,7 @@ export default function OnboardingScreen({ navigation, route }) {
                                     icon={ICONS[option.id]}
                                     selected={selectedOption === option.id}
                                     onPress={() => handleOptionSelect(option.id)}
+                                    colorTheme={COLOR_THEMES[option.id]}
                                 />
                             ))}
                         </View>
@@ -170,7 +178,7 @@ export default function OnboardingScreen({ navigation, route }) {
                                 label={options.find(opt => opt.id === 'custom').label}
                                 selected={selectedOption === 'custom'}
                                 onPress={() => handleOptionSelect('custom')}
-                                variant="solid"
+                                variant="red"
                             />
                         </View>
                     </>

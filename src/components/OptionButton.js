@@ -3,14 +3,25 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 
-export default function OptionButton({ label, selected, onPress }) {
+export default function OptionButton({ label, selected, onPress, variant = 'default' }) {
+    const isRedVariant = variant === 'red';
+
     return (
         <TouchableOpacity
-            style={[styles.button, selected && styles.buttonSelected]}
+            style={[
+                styles.button,
+                isRedVariant && styles.buttonRed,
+                selected && (isRedVariant ? styles.buttonRedSelected : styles.buttonSelected)
+            ]}
             onPress={onPress}
             activeOpacity={0.7}
         >
-            <Text style={[styles.text, selected && styles.textSelected, TYPOGRAPHY.body]}>
+            <Text style={[
+                styles.text,
+                isRedVariant && styles.textRed,
+                selected && (isRedVariant ? styles.textRedSelected : styles.textSelected),
+                TYPOGRAPHY.body
+            ]}>
                 {label}
             </Text>
         </TouchableOpacity>
@@ -47,5 +58,23 @@ const styles = StyleSheet.create({
     textSelected: {
         color: COLORS.white,
         fontWeight: '600',
+    },
+    buttonRed: {
+        backgroundColor: '#FEF2F2',
+        borderColor: '#FEE2E2',
+    },
+    buttonRedSelected: {
+        backgroundColor: '#FEE2E2',
+        borderColor: '#FCA5A5',
+        elevation: 3,
+        shadowOpacity: 0.15,
+    },
+    textRed: {
+        color: '#991B1B',
+        fontWeight: '600',
+    },
+    textRedSelected: {
+        color: '#DC2626',
+        fontWeight: '700',
     },
 });
