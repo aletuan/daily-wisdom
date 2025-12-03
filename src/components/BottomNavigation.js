@@ -16,6 +16,30 @@ export default function BottomNavigation({ navigation, language, currentScreen }
         <View style={styles.navigationBar}>
             <TouchableOpacity
                 style={styles.navButton}
+                onPress={() => {
+                    if (currentScreen !== 'Onboarding') {
+                        navigation.navigate('Onboarding', { language });
+                    }
+                }}
+                activeOpacity={0.7}
+            >
+                <MaterialIcons
+                    name="explore"
+                    size={24}
+                    color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
+                />
+                <Text
+                    style={[
+                        styles.navButtonText,
+                        currentScreen === 'Onboarding' && styles.navButtonActive,
+                    ]}
+                >
+                    Explore
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.navButton}
                 onPress={handleNewWisdom}
                 activeOpacity={0.7}
             >

@@ -13,6 +13,7 @@ import HabitIcon from '../components/icons/HabitIcon';
 import StressIcon from '../components/icons/StressIcon';
 import GrowthIcon from '../components/icons/GrowthIcon';
 import ProfileIcon from '../components/ProfileIcon';
+import BottomNavigation from '../components/BottomNavigation';
 import { getUserProfile, onAuthStateChange } from '../services/authService';
 
 const ICONS = {
@@ -197,6 +198,13 @@ export default function OnboardingScreen({ navigation, route }) {
                     <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Bottom Navigation Bar */}
+            <BottomNavigation
+                navigation={navigation}
+                language={language}
+                currentScreen="Onboarding"
+            />
         </KeyboardAvoidingView>
     );
 }
@@ -260,8 +268,6 @@ const styles = StyleSheet.create({
         padding: 24,
         paddingBottom: 40,
         backgroundColor: COLORS.white,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
     },
     continueButton: {
         backgroundColor: '#333333',
