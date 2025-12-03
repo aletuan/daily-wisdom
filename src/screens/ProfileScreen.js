@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
@@ -7,6 +7,7 @@ import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
 import { getUserProfile, updateProfile, uploadAvatar, signOut, calculateZodiacSign } from '../services/authService';
 import { useUser } from '../contexts/UserContext';
+import BottomNavigation from '../components/BottomNavigation';
 
 export default function ProfileScreen({ route, navigation }) {
     const { language = 'en' } = route.params || {};
@@ -425,24 +426,11 @@ export default function ProfileScreen({ route, navigation }) {
             </View>
 
             {/* Bottom Navigation Bar */}
-            <View style={styles.navigationBar}>
-                <TouchableOpacity
-                    style={styles.navButton}
-                    activeOpacity={0.7}
-                >
-                    <MaterialIcons name="person" size={24} color={COLORS.textMain} />
-                    <Text style={[styles.navButtonText, styles.navButtonActive]}>Profile</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.navButton}
-                    onPress={() => navigation.navigate('Favorites', { language })}
-                    activeOpacity={0.7}
-                >
-                    <MaterialIcons name="favorite" size={24} color={COLORS.lightGrey} />
-                    <Text style={styles.navButtonText}>Favorites</Text>
-                </TouchableOpacity>
-            </View>
+            <BottomNavigation
+                navigation={navigation}
+                language={language}
+                currentScreen="Profile"
+            />
         </View>
     );
 }
@@ -587,30 +575,5 @@ const styles = StyleSheet.create({
     },
     buttonDisabled: {
         opacity: 0.6,
-    },
-    navigationBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: COLORS.white,
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
-        paddingBottom: Platform.OS === 'ios' ? 28 : 12,
-    },
-    navButton: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-    },
-    navButtonText: {
-        fontSize: 12,
-        color: COLORS.lightGrey,
-        marginTop: 4,
-    },
-    navButtonActive: {
-        color: COLORS.textMain,
-        fontWeight: '600',
     },
 });
