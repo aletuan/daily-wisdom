@@ -60,6 +60,9 @@ Users can save quotes to a personal "Wisdom Book" and access their curated colle
 - **Management**:
   - Swipe to unfavorite/delete from library
   - Optional: Sort by date saved or author
+- **Streak function**
+  - Streak counter
+  - Streak display in the calendar
 - **Carousal Slide**
   - Showing carousal slides in the Welcome Screen to introduce about app and features
 
