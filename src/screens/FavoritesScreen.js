@@ -357,8 +357,6 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     calendar: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
     },
     hintText: {
         fontSize: 14,
