@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Compass, Sparkles, Heart, User } from 'lucide-react-native';
 import { COLORS } from '../styles/colors';
 
 export default function BottomNavigation({ navigation, language, currentScreen }) {
@@ -15,8 +15,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                 }}
                 activeOpacity={0.7}
             >
-                <MaterialIcons
-                    name="explore"
+                <Compass
                     size={24}
                     color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
                 />
@@ -39,8 +38,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                 }}
                 activeOpacity={0.7}
             >
-                <MaterialIcons
-                    name="auto-awesome"
+                <Sparkles
                     size={24}
                     color={currentScreen === 'Onboarding' ? COLORS.textMain : COLORS.lightGrey}
                 />
@@ -63,10 +61,10 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                 }}
                 activeOpacity={0.7}
             >
-                <MaterialIcons
-                    name="favorite"
+                <Heart
                     size={24}
                     color={currentScreen === 'Favorites' ? COLORS.textMain : COLORS.lightGrey}
+                    fill={currentScreen === 'Favorites' ? COLORS.textMain : 'none'}
                 />
                 <Text
                     style={[
@@ -87,8 +85,7 @@ export default function BottomNavigation({ navigation, language, currentScreen }
                 }}
                 activeOpacity={0.7}
             >
-                <MaterialIcons
-                    name="person"
+                <User
                     size={24}
                     color={currentScreen === 'Profile' ? COLORS.textMain : COLORS.lightGrey}
                 />

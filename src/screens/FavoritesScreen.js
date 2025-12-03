@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView
 import { useFocusEffect } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import { Swipeable } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Trash2 } from 'lucide-react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { FONTS } from '../styles/typography';
@@ -269,7 +269,7 @@ export default function FavoritesScreen({ route, navigation }) {
                                         style={styles.deleteButton}
                                         onPress={() => handleDelete(favorite.id)}
                                     >
-                                        <MaterialIcons name="delete-outline" size={24} color={COLORS.white} />
+                                        <Trash2 size={24} color={COLORS.white} />
                                     </TouchableOpacity>
                                     <Text style={styles.deleteLabel}>{t.delete}</Text>
                                 </View>

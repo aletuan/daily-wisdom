@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Pencil } from 'lucide-react-native';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
@@ -321,7 +321,7 @@ export default function ProfileScreen({ route, navigation }) {
                             getAvatarDisplay()
                         )}
                         <View style={styles.editIcon}>
-                            <MaterialIcons name="edit" size={14} color="#000000" />
+                            <Pencil size={14} color="#000000" />
                         </View>
                     </TouchableOpacity>
                 </View>
