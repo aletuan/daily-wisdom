@@ -107,6 +107,14 @@ export default function OnboardingScreen({ navigation, route }) {
     const handleOptionSelect = (id) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedOption(id);
+
+        // If not custom option, navigate immediately to Emotion screen
+        if (id !== 'custom') {
+            const context = options.find(opt => opt.id === id)?.label;
+            if (context) {
+                navigation.navigate('Emotion', { context, language });
+            }
+        }
     };
 
     const handleBackToOptions = () => {
@@ -188,16 +196,18 @@ export default function OnboardingScreen({ navigation, route }) {
                 )}
             </ScrollView>
 
-            <View style={styles.footer}>
-                <TouchableOpacity
-                    style={[styles.continueButton, !canContinue && styles.continueButtonDisabled]}
-                    onPress={handleContinue}
-                    disabled={!canContinue}
-                    activeOpacity={0.8}
-                >
-                    <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.continue}</Text>
-                </TouchableOpacity>
-            </View>
+            {isCustomSelected && (
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={[styles.continueButton, !canContinue && styles.continueButtonDisabled]}
+                        onPress={handleContinue}
+                        disabled={!canContinue}
+                        activeOpacity={0.8}
+                    >
+                        <Text style={[styles.continueButtonText, TYPOGRAPHY.body, { fontWeight: '600' }]}>{t.save}</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
             {/* Bottom Navigation Bar */}
             <BottomNavigation

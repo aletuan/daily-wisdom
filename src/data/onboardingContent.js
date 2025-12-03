@@ -5,6 +5,7 @@ export const ONBOARDING_CONTENT = {
         customPlaceholder: "Whatever you need to share...",
         backToOptions: "← Back to options",
         continue: "Continue",
+        save: "Save",
     },
     vi: {
         greeting: "Chào bạn, mình ở đây để đồng hành cùng bạn.",
@@ -12,5 +13,6 @@ export const ONBOARDING_CONTENT = {
         customPlaceholder: "Bất cứ điều gì bạn muốn chia sẻ...",
         backToOptions: "← Quay lại các lựa chọn",
         continue: "Tiếp tục",
+        save: "Lưu",
     }
 };
