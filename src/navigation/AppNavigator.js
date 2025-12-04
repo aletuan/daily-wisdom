@@ -6,6 +6,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import EmotionScreen from '../screens/EmotionScreen';
 import WisdomScreen from '../screens/WisdomScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import HeaderProfileIcon from '../components/HeaderProfileIcon';
 import BackArrowIcon from '../components/icons/BackArrowIcon';
@@ -85,6 +86,11 @@ export default function AppNavigator() {
                     name="Profile"
                     component={ProfileScreen}
                     options={{ title: 'Profile' }}
+                />
+                <Stack.Screen
+                    name="Settings"
+                    component={SettingsScreen}
+                    options={{ title: 'Settings' }}
                 />
                 <Stack.Screen
                     name="Favorites"

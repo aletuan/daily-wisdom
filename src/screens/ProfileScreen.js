@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../styles/colors';
 import { TYPOGRAPHY } from '../styles/typography';
 import { PROFILE_CONTENT } from '../data/profileContent';
-import { getUserProfile, updateProfile, uploadAvatar, signOut, calculateZodiacSign } from '../services/authService';
+import { getUserProfile, updateProfile, uploadAvatar, calculateZodiacSign } from '../services/authService';
 import { useUser } from '../contexts/UserContext';
 import BottomNavigation from '../components/BottomNavigation';
 
@@ -37,12 +37,16 @@ export default function ProfileScreen({ route, navigation }) {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={handleSignOut} activeOpacity={0.7} style={{ marginRight: 16 }}>
-                    <Text style={{ fontSize: 16, color: COLORS.textMain }}>{t.signOut}</Text>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Settings', { language })}
+                    activeOpacity={0.7}
+                    style={{ marginRight: 16 }}
+                >
+                    <MaterialIcons name="settings" size={24} color={COLORS.textMain} />
                 </TouchableOpacity>
             ),
         });
-    }, [navigation, t]);
+    }, [navigation, language]);
 
     const loadProfile = async () => {
         setLoading(true);
@@ -254,33 +258,6 @@ export default function ProfileScreen({ route, navigation }) {
         } finally {
             setSaving(false);
         }
-    };
-
-    const handleSignOut = async () => {
-        Alert.alert(
-            'Sign Out',
-            'Are you sure you want to sign out?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Sign Out',
-                    style: 'destructive',
-                    onPress: async () => {
-                        const { error } = await signOut();
-                        if (error) {
-                            setError(t.signOutError);
-                        } else {
-                            refreshProfile(); // Clear global context
-                            // Navigate to Welcome screen
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'Welcome' }],
-                            });
-                        }
-                    },
-                },
-            ]
-        );
     };
 
     const getAvatarDisplay = () => {
