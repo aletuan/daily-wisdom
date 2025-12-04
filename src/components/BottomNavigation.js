@@ -113,8 +113,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         paddingVertical: 12,
         paddingHorizontal: 24,
-        borderTopWidth: 1,
-        borderTopColor: '#E0E0E0',
         paddingBottom: Platform.OS === 'ios' ? 28 : 12,
     },
     navButton: {
