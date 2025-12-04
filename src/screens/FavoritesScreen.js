@@ -238,10 +238,12 @@ export default function FavoritesScreen({ route, navigation }) {
                 style={styles.calendar}
             />
 
-            {/* Hint Text */}
-            <Text style={[styles.hintText, TYPOGRAPHY.caption]}>
-                {t.tapDateToView}
-            </Text>
+            {/* Usage Guide */}
+            <View style={styles.guideContainer}>
+                <Text style={styles.guideText}>
+                    💡 Tap a card to view details • Swipe left to delete / update
+                </Text>
+            </View>
 
             {/* Recent Favorites Header */}
             <Text style={[styles.recentHeader, TYPOGRAPHY.h3]}>
@@ -357,15 +359,22 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     calendar: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
+        marginBottom: 8,
     },
-    hintText: {
-        fontSize: 14,
+    guideContainer: {
+        backgroundColor: '#F8F9FA',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        marginHorizontal: 24,
+        marginVertical: 12,
+        borderRadius: 8,
+        borderLeftWidth: 3,
+        borderLeftColor: COLORS.sageGreen,
+    },
+    guideText: {
+        fontSize: 13,
         color: COLORS.textSecondary,
-        textAlign: 'center',
-        paddingVertical: 16,
-        fontStyle: 'italic',
+        lineHeight: 18,
     },
     recentHeader: {
         fontSize: 20,
