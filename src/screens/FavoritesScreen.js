@@ -216,6 +216,7 @@ export default function FavoritesScreen({ route, navigation }) {
                 current={new Date().toISOString().split('T')[0]}
                 markedDates={markedDates}
                 onDayPress={handleDatePress}
+                hideExtraDays={true}
                 theme={{
                     calendarBackground: COLORS.white,
                     textSectionTitleColor: COLORS.textSecondary,
@@ -231,9 +232,9 @@ export default function FavoritesScreen({ route, navigation }) {
                     textDayFontFamily: FONTS.sans.regular,
                     textMonthFontFamily: FONTS.serif.semiBold,
                     textDayHeaderFontFamily: FONTS.sans.semiBold,
-                    textDayFontSize: 16,
-                    textMonthFontSize: 18,
-                    textDayHeaderFontSize: 14,
+                    textDayFontSize: 13,
+                    textMonthFontSize: 15,
+                    textDayHeaderFontSize: 11,
                 }}
                 style={styles.calendar}
             />
@@ -244,11 +245,6 @@ export default function FavoritesScreen({ route, navigation }) {
                     💡 Tap a card to view details • Swipe left to delete / update
                 </Text>
             </View>
-
-            {/* Recent Favorites Header */}
-            <Text style={[styles.recentHeader, TYPOGRAPHY.h3]}>
-                {t.recentFavorites}
-            </Text>
 
             {/* Scrollable Recent Favorites List */}
             <ScrollView
@@ -359,27 +355,23 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     calendar: {
-        marginBottom: 8,
+        marginBottom: 0,
+        paddingBottom: 0,
+        transform: [{ scaleY: 0.9 }],
     },
     guideContainer: {
         backgroundColor: '#F8F9FA',
         paddingVertical: 12,
         paddingHorizontal: 16,
         marginHorizontal: 24,
-        marginVertical: 12,
+        marginTop: 8,
+        marginBottom: 12,
         borderRadius: 8,
     },
     guideText: {
         fontSize: 13,
         color: COLORS.textSecondary,
         lineHeight: 18,
-    },
-    recentHeader: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: COLORS.darkGreen,
-        marginBottom: 16,
-        paddingHorizontal: 24,
     },
     recentScrollView: {
         flex: 1,
