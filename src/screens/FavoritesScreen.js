@@ -114,12 +114,12 @@ export default function FavoritesScreen({ route, navigation }) {
             marked[today] = {
                 ...marked[today],
                 selected: true,
-                selectedColor: COLORS.sageGreen,
+                selectedColor: '#000000',
             };
         } else {
             marked[today] = {
                 selected: true,
-                selectedColor: COLORS.sageGreen,
+                selectedColor: '#000000',
             };
         }
 
