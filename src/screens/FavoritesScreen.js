@@ -368,8 +368,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 24,
         marginVertical: 12,
         borderRadius: 8,
-        borderLeftWidth: 3,
-        borderLeftColor: COLORS.sageGreen,
     },
     guideText: {
         fontSize: 13,
